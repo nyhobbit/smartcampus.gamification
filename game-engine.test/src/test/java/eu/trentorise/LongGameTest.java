@@ -23,6 +23,7 @@ public class LongGameTest extends GameTest {
 
 	private static final String GAME = "long_game";
 	private static final String ACTION = "save_itinerary";
+	private static final String RESET_ACTION = "reset";
 
 	private static final String PLAYER_ID = "daken";
 
@@ -45,7 +46,7 @@ public class LongGameTest extends GameTest {
 		String rootProjFolder = new File(System.getProperty("user.dir"))
 				.getParent();
 		String pathGame = rootProjFolder
-				+ "/game-engine.games/rovereto-longgame";
+				+ "/game-engine.rules/src/main/resources/rules";
 
 		loadFilesystemRules(GAME, Arrays.asList(pathGame + "/constants",
 				pathGame + "/greenBadges.drl", 
@@ -53,7 +54,8 @@ public class LongGameTest extends GameTest {
 				pathGame + "/mode-counters.drl", 
 				pathGame + "/finalClassificationBadges.drl",
 				pathGame + "/specialBadges.drl",
-  				pathGame + "/weekClassificationBadges.drl"));  
+  				pathGame + "/weekClassificationBadges.drl",
+  				pathGame + "/resetGameData.drl"));  
 	}
 
 	@Override
@@ -68,7 +70,6 @@ public class LongGameTest extends GameTest {
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
 
-		data = new HashMap<String, Object>();
 		data.put("bikeDistance", 30d);
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
@@ -99,13 +100,13 @@ public class LongGameTest extends GameTest {
 		execList.add(ex);
 
 		/*
-		 * this "reset" action is a fake action used in
-		 * combination with a stub rule in the .drl file to force
-		 * a reset of the "_past" counters.
+		 * this "reset" action forces
+		 * a reset of the "_past" counters 
+		 * in a Player's custom data
 		 */
 		data = new HashMap<String, Object>();
-		data.put("reset", new Boolean(true));
-		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
+		data.put("counters_reset", new Boolean(true));
+		ex = new ExecData(GAME, RESET_ACTION, PLAYER_ID, data);
 		execList.add(ex);
 
 		data = new HashMap<String, Object>();
@@ -117,7 +118,15 @@ public class LongGameTest extends GameTest {
 		data.put("busDistance", 5d);
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-
+		
+		/* this "reset player" action 
+		 * resets ALL players' state for test purposes.
+		 */
+		data = new HashMap<String, Object>();
+		data.put("player_reset", new Boolean(true));
+		ex = new ExecData(GAME, RESET_ACTION, PLAYER_ID, data);
+		execList.add(ex);
+		
 	}
 
 	@Override
@@ -143,6 +152,8 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(2, s.getCustomData().get("car_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("bus_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("train_trips"));
+		Assert.assertEquals(5, s.getCustomData().get("zero_impact_trips"));
+
 
 		// Check period counters for Km
 		Assert.assertEquals(2.3d, s.getCustomData().get("walk_km_past"));
@@ -159,6 +170,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(1, s.getCustomData().get("car_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("bus_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("train_trips_past"));
+		Assert.assertEquals(0, s.getCustomData().get("zero_impact_trips_past"));
 
 	}
 }
