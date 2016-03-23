@@ -50,9 +50,10 @@ public class PercentMobilityChallenge extends Challenge {
 	customData.put(Constants.CH + this.chId + "_mode", this.mode);
 	customData.put(Constants.CH + this.chId + "point_type", this.pointType);
 
-	if (!tp.containsKey("percent"))
-	    throw new UndefinedChallengeException("undefined challenge!");
-	this.percent = ((Double) tp.get("percent")).doubleValue();
+	if (!tp.containsKey("target"))
+	    throw new UndefinedChallengeException(
+		    "undefined value target for challenge!");
+	this.percent = ((Double) tp.get("target")).doubleValue();
 	if (!tp.containsKey("baseline"))
 	    throw new UndefinedChallengeException("undefined challenge!");
 	this.baseline = ((Double) tp.get("baseline")).doubleValue();

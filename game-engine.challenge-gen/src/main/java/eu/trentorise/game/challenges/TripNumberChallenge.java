@@ -50,9 +50,10 @@ public class TripNumberChallenge extends Challenge {
 	customData.put("ch_" + this.chId + "_mode", this.mode);
 	customData.put("ch_" + this.chId + "point_type", this.pointType);
 
-	if (!tp.containsKey("trips"))
-	    throw new UndefinedChallengeException("undefined challenge!");
-	this.nTrips = ((Integer) tp.get("trips")).intValue();
+	if (!tp.containsKey("target"))
+	    throw new UndefinedChallengeException(
+		    "undefined target for challenge!");
+	this.nTrips = ((Double) tp.get("target")).intValue();
 	customData.put("ch_" + this.chId + "_target", this.nTrips);
 
 	if (!tp.containsKey("bonus"))

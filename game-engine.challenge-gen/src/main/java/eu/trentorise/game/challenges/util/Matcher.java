@@ -38,10 +38,10 @@ public class Matcher {
     }
 
     private boolean challengeMatch(Content user) {
-	if (challenge.getType().equals("PERCENT")) {
-	    return percentMatch(user);
-	}
-	return false;
+	// if (challenge.getType().equals("PERCENT")) {
+	return percentMatch(user);
+	// }
+	// return false;
     }
 
     private boolean percentMatch(Content user) {
@@ -75,19 +75,22 @@ public class Matcher {
 		&& user.getCustomData() != null
 		&& user.getCustomData().getAdditionalProperties() != null
 		&& !user.getCustomData().getAdditionalProperties().isEmpty()) {
+	    List<String> vars = new ArrayList<String>();
 	    if (containsAnyOperator(criteria)) {
-		List<String> vars = getVariablesFromCriteria(criteria);
-		for (String var : vars) {
-		    if (!user.getCustomData().getAdditionalProperties()
-			    .containsKey(var)) {
-			logger.warn("Custom data not found " + var);
-			return false;
-		    }
-		}
-		return true;
+		vars = getVariablesFromCriteria(criteria);
+	    } else {
+		vars = getVariablesFromSingleCriteria(criteria);
 	    }
-	    logger.warn("no operator found in criteria: " + criteria
-		    + " for operators " + operators.toString());
+	    for (String var : vars) {
+		if (criteria.contains("null")) {
+		    // do nothing
+		} else if (!user.getCustomData().getAdditionalProperties()
+			.containsKey(var)) {
+		    logger.warn("Custom data not found " + var);
+		    return false;
+		}
+	    }
+	    return true;
 	}
 	logger.warn("user null or not custom data available");
 	return false;
@@ -105,6 +108,16 @@ public class Matcher {
 		    result.add(var);
 		}
 	    }
+	}
+	return result;
+    }
+
+    private List<String> getVariablesFromSingleCriteria(String expression) {
+	List<String> result = new ArrayList<String>();
+	// expression in the form: var operator value
+	String var = StringUtils.stripStart(expression, null).split(" ")[0];
+	if (!result.contains(var)) {
+	    result.add(var);
 	}
 	return result;
     }

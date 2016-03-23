@@ -51,7 +51,7 @@ public class ChallengesRulesGenerator {
 	    // TODO: con peppo, dobbiamo capire come le varie tipologie vanno ad
 	    // essere usate nei template
 	    if (challengeSpec.getTarget() instanceof Double) {
-		params.put("percent", challengeSpec.getTarget());
+		params.put("target", challengeSpec.getTarget());
 	    }
 	    params.put("mode", challengeSpec.getGoalType());
 	    params.put("bonus", challengeSpec.getBonus());
