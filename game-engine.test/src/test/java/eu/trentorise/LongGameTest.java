@@ -23,6 +23,7 @@ public class LongGameTest extends GameTest {
 
 	private static final String GAME = "long_game";
 	private static final String ACTION = "save_itinerary";
+	private static final String RESET_ACTION = "reset";
 
 	private static final String PLAYER_ID = "daken";
 
@@ -39,8 +40,8 @@ public class LongGameTest extends GameTest {
 		concepts.add(new BadgeCollectionConcept("public transport aficionado"));
 		concepts.add(new BadgeCollectionConcept("park and ride pioneer"));
 		concepts.add(new BadgeCollectionConcept("leaderboard top 3"));
-		
-		defineGameHelper(GAME, Arrays.asList(ACTION), concepts);
+
+		defineGameHelper(GAME, Arrays.asList(ACTION, RESET_ACTION), concepts);
 
 		String rootProjFolder = new File(System.getProperty("user.dir"))
 				.getParent();
@@ -48,12 +49,12 @@ public class LongGameTest extends GameTest {
 				+ "/game-engine.games/rovereto-longgame";
 
 		loadFilesystemRules(GAME, Arrays.asList(pathGame + "/constants",
-				pathGame + "/greenBadges.drl", 
-				pathGame + "/greenPoints.drl",
-				pathGame + "/mode-counters.drl", 
-				pathGame + "/finalClassificationBadges.drl",
-				pathGame + "/specialBadges.drl",
-  				pathGame + "/weekClassificationBadges.drl"));  
+				pathGame + "/greenBadges.drl", pathGame + "/greenPoints.drl",
+				pathGame + "/mode-counters.drl", pathGame
+						+ "/finalClassificationBadges.drl", pathGame
+						+ "/specialBadges.drl", pathGame
+						+ "/weekClassificationBadges.drl", pathGame
+						+ "/resetGameData.drl"));
 	}
 
 	@Override
@@ -68,7 +69,6 @@ public class LongGameTest extends GameTest {
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
 
-		data = new HashMap<String, Object>();
 		data.put("bikeDistance", 30d);
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
@@ -99,13 +99,12 @@ public class LongGameTest extends GameTest {
 		execList.add(ex);
 
 		/*
-		 * this "reset" action is a fake action used in
-		 * combination with a stub rule in the .drl file to force
-		 * a reset of the "_past" counters.
+		 * this "reset" action forces a reset of the "_past" counters in a
+		 * Player's custom data
 		 */
 		data = new HashMap<String, Object>();
-		data.put("reset", new Boolean(true));
-		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
+		data.put("counters_reset", new Boolean(true));
+		ex = new ExecData(GAME, RESET_ACTION, PLAYER_ID, data);
 		execList.add(ex);
 
 		data = new HashMap<String, Object>();
@@ -118,17 +117,26 @@ public class LongGameTest extends GameTest {
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
 
+		/*
+		 * this "reset player" action resets ALL players' state for test
+		 * purposes.
+		 */
+		data = new HashMap<String, Object>();
+		data.put("player_reset", new Boolean(true));
+		ex = new ExecData(GAME, RESET_ACTION, PLAYER_ID, data);
+		execList.add(ex);
+
 	}
 
 	@Override
 	public void analyzeResult() {
 		PlayerState s = playerSrv.loadState(GAME, PLAYER_ID, false);
 		Assert.assertNotNull(s);
-		
-		//Check point totals
+
+		// Check point totals
 		assertionPoint(GAME, 492d, PLAYER_ID, "green leaves");
-		
-		//Check cumulative counters for Km
+
+		// Check cumulative counters for Km
 		Assert.assertEquals(22.7d, s.getCustomData().get("walk_km"));
 		Assert.assertEquals(40.57d, s.getCustomData().get("bike_km"));
 		Assert.assertEquals(10.47d, s.getCustomData().get("bikesharing_km"));
@@ -143,6 +151,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(2, s.getCustomData().get("car_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("bus_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("train_trips"));
+		Assert.assertEquals(5, s.getCustomData().get("zero_impact_trips"));
 
 		// Check period counters for Km
 		Assert.assertEquals(2.3d, s.getCustomData().get("walk_km_past"));
@@ -159,6 +168,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(1, s.getCustomData().get("car_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("bus_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("train_trips_past"));
+		Assert.assertEquals(0, s.getCustomData().get("zero_impact_trips_past"));
 
 	}
 }
