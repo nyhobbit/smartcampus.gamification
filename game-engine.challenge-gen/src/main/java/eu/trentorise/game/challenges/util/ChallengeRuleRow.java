@@ -9,6 +9,7 @@ public class ChallengeRuleRow {
     private String selectionCriteria;
     private Integer bonus;
     private String name;
+    private String baselineVar;
 
     public String getType() {
 	return type;
@@ -64,6 +65,14 @@ public class ChallengeRuleRow {
 
     public String getName() {
 	return name;
+    }
+
+    public String getBaselineVar() {
+	return baselineVar;
+    }
+
+    public void setBaselineVar(String baselineVar) {
+	this.baselineVar = baselineVar;
     }
 
 }

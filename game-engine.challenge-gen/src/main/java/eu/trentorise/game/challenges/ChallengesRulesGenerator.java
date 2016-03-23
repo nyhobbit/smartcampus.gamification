@@ -56,8 +56,10 @@ public class ChallengesRulesGenerator {
 	    params.put("mode", challengeSpec.getGoalType());
 	    params.put("bonus", challengeSpec.getBonus());
 	    params.put("point_type", challengeSpec.getPointType());
-	    params.put("baseline", user.getCustomData()
-		    .getAdditionalProperties().get("walk_km_past"));
+	    params.put(
+		    "baseline",
+		    user.getCustomData().getAdditionalProperties()
+			    .get(challengeSpec.getBaselineVar()));
 	    c.setTemplateParams(params);
 	    c.compileChallenge(user.getPlayerId());
 	    buffer.append(c.getGeneratedRules());

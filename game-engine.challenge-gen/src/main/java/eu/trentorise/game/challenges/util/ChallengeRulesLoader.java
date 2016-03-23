@@ -53,7 +53,8 @@ public final class ChallengeRulesLoader {
 		crr.setTarget(Double.valueOf(elements[3]));
 		crr.setBonus(Integer.valueOf(elements[4]));
 		crr.setPointType(elements[5]);
-		crr.setSelectionCriteria(elements[7]);
+		crr.setBaselineVar(elements[7]);
+		crr.setSelectionCriteria(elements[8]);
 		response.getChallenges().add(crr);
 	    }
 
