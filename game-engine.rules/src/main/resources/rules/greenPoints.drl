@@ -73,35 +73,24 @@ then
 end
 
 rule "0-impact update green points"
-when 
+when
 	InputData($bike : data["bikeDistance"], $walk : data["walkDistance"], $bus : data["busDistance"], $train : data["trainDistance"], $car : data["carDistance"])
-	$pc : PointConcept(name == "green leaves")
+	$pc : PointConcept( name == "green leaves")
 then
-	Long totPoints=0l;
-	Long bikePoints=0l;
-	Long walkPoints=0l;
-	boolean zeroImpact = ($walk != null || $bike != null) && (($bus == null || ((Double)$bus) == 0) &&  ($car == null || ((Double)$car) == 0) && ($train == null || ((Double)$train) == 0));	
+	boolean zeroImpact = ($walk != null || $bike != null) && (($bus == null || ((Double)$bus) == 0) &&  ($car == null || ((Double)$car) == 0) && ($train == null || ((Double)$train) == 0));
 	
-	if ($bike != null) {	
-		Double bikeDistance = (Double)$bike <= bike_max ? (Double) $bike : bike_max;
-		bikePoints = Math.round(bikeDistance * green_bike_points);
-		// log(bikePoints.toString() + " bike points applied for " + bikeDistance.toString() + " bike Km.");
-	}	
-	if ($walk != null) {
-		Double walkDistance = (Double)$walk <= walk_max ? (Double) $walk : walk_max;
-		if (walkDistance > walk_min)
-			walkPoints = Math.round(walkDistance * green_walk_points);
-		// log(walkPoints.toString() + " walk points applied for " + walkDistance.toString() + " walk Km.");
-	}	
-	log("apply \'0-impact update green points\'");
-	totPoints = bikePoints + walkPoints;
-	if (zeroImpact == true) {
-		totPoints = totPoints * zero_impact_booster;
-		log("0-impact booster applied");
-	}
-	$pc.setScore($pc.getScore() + totPoints);
+	Double walkDistance = $walk != null ? (Double) $walk : 0;
+	walkDistance = walkDistance < walk_min ? 0 : walkDistance;
+	walkDistance = walkDistance > walk_max ? walk_max : walkDistance;
+	
+	Double bikeDistance = $bike != null ? (Double) $bike : 0;
+	bikeDistance = bikeDistance > bike_max ? bike_max : bikeDistance;
+	
+	Long score = Math.round(walkDistance * green_walk_points)  + Math.round(bikeDistance * green_bike_points) ;
+	score = zeroImpact ? score * zero_impact_booster : score; 
+	$pc.setScore($pc.getScore() + score);
 	update($pc);
-	insert(new PointDelta(totPoints,"green leaves"));  
+	insert(new PointDelta(score,"green leaves"));
 end
 
 rule "green sustainable bonus"
@@ -127,4 +116,3 @@ then
     update($pc);
     insert(new PointDelta(recommendation_bonus,"green leaves")); 
 end
-
