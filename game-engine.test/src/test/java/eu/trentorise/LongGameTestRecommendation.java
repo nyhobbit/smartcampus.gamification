@@ -10,7 +10,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import eu.trentorise.GameTest.ExecData;
 import eu.trentorise.game.model.BadgeCollectionConcept;
 import eu.trentorise.game.model.PlayerState;
 import eu.trentorise.game.model.PointConcept;
@@ -38,154 +37,149 @@ public class LongGameTestRecommendation extends GameTest {
 		concepts.add(new BadgeCollectionConcept("green leaves"));
 		concepts.add(new BadgeCollectionConcept("leaderboard top 3"));
 		concepts.add(new BadgeCollectionConcept("recommendations"));
-		
+
 		defineGameHelper(GAME, Arrays.asList(ACTION), concepts);
 
 		String rootProjFolder = new File(System.getProperty("user.dir"))
 				.getParent();
 		String pathGame = rootProjFolder
-				+ "/game-engine.rules/src/main/resources/rules";
+				+ "/game-engine.games/rovereto-longgame";
 
 		loadFilesystemRules(GAME, Arrays.asList(pathGame + "/constants",
-				pathGame + "/greenBadges.drl", 
-				pathGame + "/greenPoints.drl",
-				pathGame + "/mode-counters.drl", 
-				pathGame + "/finalClassificationBadges.drl",
-				pathGame + "/specialBadges.drl",
-  				pathGame + "/weekClassificationBadges.drl"));  
+				pathGame + "/greenBadges.drl", pathGame + "/greenPoints.drl",
+				pathGame + "/mode-counters.drl", pathGame
+						+ "/finalClassificationBadges.drl", pathGame
+						+ "/specialBadges.drl", pathGame
+						+ "/weekClassificationBadges.drl"));
 	}
 
 	@Override
 	public void defineExecData(List<ExecData> execList) {
 		Map<String, Object> data = new HashMap<String, Object>();
-		//data.put("walkDistance", 0.4d);
+		// data.put("walkDistance", 0.4d);
 		ExecData ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
-		//SO FAR 3 INVITED..
-		
+
+		// SO FAR 3 INVITED..
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
-		//SO FAR 5 INVITED..
-		
+
+		// SO FAR 5 INVITED..
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
-		//SO FAR 10 INVITED..
-		
+
+		// SO FAR 10 INVITED..
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
-		//SO FAR 25 INVITED..
-		
+
+		// SO FAR 25 INVITED..
+
 		data = new HashMap<String, Object>();
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
-		
+
 	}
 
 	@Override
 	public void analyzeResult() {
 		PlayerState s = playerSrv.loadState(GAME, PLAYER_ID, false);
 		Assert.assertNotNull(s);
-		
-		//Check point totals
-		assertionPoint(GAME, 1170d, PLAYER_ID, "green leaves");
-		
-		//Check cumulative counters for Km
-		Assert.assertEquals(26, s.getCustomData().get("recommendations"));
 
+		// Check point totals
+		assertionPoint(GAME, 1170d, PLAYER_ID, "green leaves");
+
+		// Check cumulative counters for Km
+		Assert.assertEquals(26, s.getCustomData().get("recommendations"));
 
 	}
 }
-
-
