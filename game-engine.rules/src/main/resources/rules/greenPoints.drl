@@ -7,15 +7,12 @@ global Integer recommendation_bonus;
 global Integer green_bus_points_base;
 global Integer green_bus_points_step1;
 global Integer green_bus_points_step2;
-global Integer green_train_points_base;
-global Integer green_train_points_step1;
-global Integer green_train_points_step2;
+global Integer green_bus_points_step3;
 global Integer zero_impact_booster;
 
 global Double bus_threshold_step1;
 global Double bus_threshold_step2;
-global Double train_threshold_step1;
-global Double train_threshold_step2;
+global Double bus_threshold_step3;
 global Double walk_min;
 global Double walk_max;
 global Double bike_max;
@@ -28,48 +25,30 @@ declare PointDelta
 	pointType : String
 end
 
-rule "bus update green points"
+rule "public transport update green points"
 when
-	InputData($bus : data["busDistance"])
+	InputData($bus : data["busDistance"] !=null || $train : data["trainDistance"] != null)
 	$pc : PointConcept(name == "green leaves")
 then
-	if ($bus != null) {
-		log("apply \'bus update green points\'");	
-		Long busDistance = Math.round((Double) $bus);
-		Integer busPoints;
-		if (busDistance > bus_threshold_step1 && busDistance <= bus_threshold_step2)
-			busPoints = green_bus_points_step1;
-		else if (busDistance > bus_threshold_step2)
-			busPoints = green_bus_points_step2;
-		else 
-			busPoints = green_bus_points_base;
+	log("apply \'public transport update green points\'");	
+	if ($bus == null) 
+		$bus = 0d;
+	if ($train == null)
+		$train = 0d;
+	Long ptDistance = Math.round((Double)$bus + (Double)$train);
+	Integer ptPoints;
+	if (ptDistance > bus_threshold_step1 && ptDistance <= bus_threshold_step2)
+		ptPoints = green_bus_points_step1;
+	else if (ptDistance > bus_threshold_step2 && ptDistance <= bus_threshold_step3)
+		ptPoints = green_bus_points_step2;
+	else if (ptDistance > bus_threshold_step3)
+		ptPoints = green_bus_points_step3;
+	else
+		ptPoints = green_bus_points_base;
 		
-		$pc.setScore($pc.getScore() + busPoints);
+		$pc.setScore($pc.getScore() + ptPoints);
 		update($pc);
-		insert(new PointDelta(busPoints,"green leaves")); 
-	}
-end
-
-rule "train update green points"
-when
-	InputData($train : data["trainDistance"])
-	$pc : PointConcept(name == "green leaves")
-then
-	if ($train != null) {
-		log("apply \'train update green points\'");	
-		Long trainDistance = Math.round((Double) $train);
-		Integer trainPoints;
-		if (trainDistance > train_threshold_step1 && trainDistance <= train_threshold_step2)
-			trainPoints = green_train_points_step1;
-		else if (trainDistance > train_threshold_step2)
-			trainPoints = green_train_points_step2;
-		else 
-			trainPoints = green_train_points_base;
-		
-		$pc.setScore($pc.getScore() + trainPoints);
-		update($pc);
-		insert(new PointDelta(trainPoints,"green leaves")); 
-	}
+		insert(new PointDelta(ptPoints,"green leaves")); 
 end
 
 rule "0-impact update green points"

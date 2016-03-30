@@ -15,6 +15,7 @@ import eu.trentorise.game.model.PlayerState;
 import eu.trentorise.game.model.PointConcept;
 import eu.trentorise.game.model.core.GameConcept;
 import eu.trentorise.game.services.PlayerService;
+import eu.trentorise.game.task.ClassificationTask;
 
 public class LongGameTest extends GameTest {
 
@@ -23,7 +24,7 @@ public class LongGameTest extends GameTest {
 
 	private static final String GAME = "long_game";
 	private static final String ACTION = "save_itinerary";
-	private static final String RESET_ACTION = "reset";
+	private static final String RESET_ACTION = "reset_game";
 
 	private static final String PLAYER_ID = "daken";
 
@@ -41,7 +42,7 @@ public class LongGameTest extends GameTest {
 		concepts.add(new BadgeCollectionConcept("park and ride pioneer"));
 		concepts.add(new BadgeCollectionConcept("leaderboard top 3"));
 		
-		defineGameHelper(GAME, Arrays.asList(ACTION), concepts);
+		defineGameHelper(GAME, Arrays.asList(ACTION, RESET_ACTION), concepts);
 
 		String rootProjFolder = new File(System.getProperty("user.dir"))
 				.getParent();
@@ -56,6 +57,9 @@ public class LongGameTest extends GameTest {
 				pathGame + "/specialBadges.drl",
   				pathGame + "/weekClassificationBadges.drl",
   				pathGame + "/resetGameData.drl"));  
+		
+		addGameTask(GAME, new ClassificationTask(null, 10, "green leaves",
+				"week classification green"));
 	}
 
 	@Override
@@ -67,9 +71,6 @@ public class LongGameTest extends GameTest {
 
 		data = new HashMap<String, Object>();
 		data.put("walkDistance", 10d);
-		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
-		execList.add(ex);
-
 		data.put("bikeDistance", 30d);
 		ex = new ExecData(GAME, ACTION, PLAYER_ID, data);
 		execList.add(ex);
@@ -121,11 +122,12 @@ public class LongGameTest extends GameTest {
 		
 		/* this "reset player" action 
 		 * resets ALL players' state for test purposes.
-		 */
+		 * 
 		data = new HashMap<String, Object>();
 		data.put("player_reset", new Boolean(true));
 		ex = new ExecData(GAME, RESET_ACTION, PLAYER_ID, data);
 		execList.add(ex);
+		*/
 		
 	}
 
@@ -135,7 +137,11 @@ public class LongGameTest extends GameTest {
 		Assert.assertNotNull(s);
 		
 		//Check point totals
-		assertionPoint(GAME, 492d, PLAYER_ID, "green leaves");
+		assertionPoint(GAME, 587d, PLAYER_ID, "green leaves");
+		
+		//Check leaderboard badge
+		assertionBadge(GAME,
+				Arrays.asList("1st_of_the_week"), PLAYER_ID, "leaderboard top 3");
 		
 		//Check cumulative counters for Km
 		Assert.assertEquals(22.7d, s.getCustomData().get("walk_km"));
@@ -152,7 +158,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(2, s.getCustomData().get("car_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("bus_trips"));
 		Assert.assertEquals(2, s.getCustomData().get("train_trips"));
-		Assert.assertEquals(5, s.getCustomData().get("zero_impact_trips"));
+		Assert.assertEquals(4, s.getCustomData().get("zero_impact_trips"));
 
 
 		// Check period counters for Km

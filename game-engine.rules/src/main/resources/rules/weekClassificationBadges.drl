@@ -5,7 +5,6 @@ import eu.trentorise.game.task.Classification;
 
 /* ***************************************************************************
 GREEN WEEK CLASSIFICATION
-??? SCATTANO SOLO ALLA FINE DI OGNI SETTIMANA ???
   
 *************************************************************************** */
 rule "1st of the week"
@@ -59,7 +58,7 @@ then
 	update( $bc );
 	$pc.setScore($pc.getScore() + 60);
     update($pc);
-    insert(new PointDelta(80,"green leaves")); 
+    insert(new PointDelta(60,"green leaves")); 
 end
     
     
