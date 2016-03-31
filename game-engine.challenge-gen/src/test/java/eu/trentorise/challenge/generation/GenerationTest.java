@@ -1,9 +1,10 @@
 package eu.trentorise.challenge.generation;
 
-import static eu.trentorise.challenge.TestConstants.CONTEXT;
-import static eu.trentorise.challenge.TestConstants.GAMEID;
-import static eu.trentorise.challenge.TestConstants.HOST;
-import static eu.trentorise.challenge.TestConstants.INSERT_CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.GAMEID;
+import static eu.trentorise.challenge.PropertiesUtil.HOST;
+import static eu.trentorise.challenge.PropertiesUtil.INSERT_CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.get;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -35,8 +36,9 @@ public class GenerationTest {
 
     @Before
     public void setup() {
-	facade = new GamificationEngineRestFacade(HOST + CONTEXT);
-	insertFacade = new GamificationEngineRestFacade(HOST + INSERT_CONTEXT);
+	facade = new GamificationEngineRestFacade(get(HOST) + get(CONTEXT));
+	insertFacade = new GamificationEngineRestFacade(get(HOST)
+		+ get(INSERT_CONTEXT));
     }
 
     @Test
@@ -69,7 +71,7 @@ public class GenerationTest {
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
 	// get users from gamification engine
-	List<Content> users = facade.readGameState(GAMEID);
+	List<Content> users = facade.readGameState(get(GAMEID));
 
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
 		new ChallengeFactory());
@@ -100,7 +102,7 @@ public class GenerationTest {
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
 	// get users from gamification engine
-	List<Content> users = facade.readGameState(GAMEID);
+	List<Content> users = facade.readGameState(get(GAMEID));
 
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
 		new ChallengeFactory());
@@ -122,7 +124,8 @@ public class GenerationTest {
 	    rule.setContent(res);
 	    rule.setName(challengeSpec.getName());
 	    // insert rule
-	    RuleDto insertedRule = insertFacade.insertGameRule(GAMEID, rule);
+	    RuleDto insertedRule = insertFacade.insertGameRule(get(GAMEID),
+		    rule);
 	    if (insertedRule != null) {
 		logger.debug("Inserted rule ");
 		assertTrue(!insertedRule.getId().isEmpty());
