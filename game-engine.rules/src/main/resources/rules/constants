@@ -20,7 +20,7 @@
 green_walk_points=10
 green_bike_points=5
 zero_impact_booster=2
-green_sustainable_bonus=5
+green_sustainable_bonus=10
 recommendation_bonus=20
 
 #GREEN POINTS for public transport (BOTH bus AND train)
