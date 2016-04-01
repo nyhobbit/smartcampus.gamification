@@ -71,7 +71,7 @@ public class GamificationEngineRestFacade {
 	    return null;
 	}
 	if (response.getLast()) {
-	    logger.error("service return only one page of result");
+	    logger.info("service return only one page of result");
 	    return response.getContent();
 	}
 	List<Content> result = new ArrayList<Content>();
@@ -91,7 +91,7 @@ public class GamificationEngineRestFacade {
 		}
 	    }
 	}
-	logger.error("service return " + page + " pages of result");
+	logger.debug("service return " + page + " pages of result");
 	return result;
     }
 
