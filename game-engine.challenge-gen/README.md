@@ -35,15 +35,13 @@ mvn clean install -Puploader
 Different zips (with related dependencies) are created inside target
 
 
-## How to run
+## Challenge generator
 
-Launch generated jar using:
+Launch using:
 
-java -jar challengeGenerator-jar-with-dependencies.jar
+java -jar challengeGenerator.jar
 
 ### Command line arguments
-
-Command line arguments:
 
 ```
  usage: challengeGeneratorTool
@@ -57,11 +55,34 @@ Command line arguments:
  -templateDir   challenges templates
 ```
 
-### Example
+#### Example
 
 ```
 java -jar challengeGenerator-jar-with-dependencies.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input challengesRules.csv -templateDir rules\templates -output output.json
 ``` 
+
+## Challenge uploader
+
+Launch using:
+
+java -jar challengeUploader.jar
+
+### Command line arguments:
+
+```
+usage: challengeUploader
+-host <host> -gameId <gameId> -input <input json file>
+ -gameId   uuid for gamification engine
+ -help     display this help
+ -host     gamification engine host
+ -input    rules to upload in json format
+```
+
+#### Example
+
+```
+java -jar challengeUploader.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input C:\Lavoro\workspace\soa\smartcampus.gamification\game -engine.challenge-gen\output.json
+```
 
 
 
