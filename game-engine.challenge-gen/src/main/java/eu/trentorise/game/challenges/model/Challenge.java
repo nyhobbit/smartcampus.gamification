@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import org.drools.template.ObjectDataCompiler;
 
-import eu.trentorise.game.challenges.Constants;
+import eu.trentorise.game.challenges.api.Constants;
 import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
 
 public abstract class Challenge {

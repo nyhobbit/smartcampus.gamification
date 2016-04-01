@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import eu.trentorise.game.challenges.api.Constants;
+
 /**
  * A facade for handling logic for Gamification Engine Rest api
  * 
@@ -21,8 +23,6 @@ import org.apache.logging.log4j.Logger;
  *      Engine</a>
  */
 public class GamificationEngineRestFacade {
-
-    private static final String RULE_PREFIX = "db://";
 
     private static final Logger logger = LogManager
 	    .getLogger(GamificationEngineRestFacade.class);
@@ -133,7 +133,7 @@ public class GamificationEngineRestFacade {
 	if (gameId == null || ruleId == null) {
 	    throw new IllegalArgumentException("input cannot be null");
 	}
-	String ruleUrl = StringUtils.removeStart(ruleId, RULE_PREFIX);
+	String ruleUrl = StringUtils.removeStart(ruleId, Constants.RULE_PREFIX);
 	WebTarget target = createEndpoint().path(GAME).path(gameId).path(RULE)
 		.path(DB).path(ruleUrl);
 	Response response = target.request().delete();

@@ -3,6 +3,7 @@ package eu.trentorise.game.challenges;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -147,6 +148,7 @@ public class ChallengeGeneratorTool {
 
 	// generate challenges
 	int tot = 0;
+	List<RuleDto> toWrite = new ArrayList<RuleDto>();
 	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
 	    Matcher matcher = new Matcher(challengeSpec);
 	    List<Content> filteredUsers = matcher.match(users);
@@ -164,16 +166,17 @@ public class ChallengeGeneratorTool {
 	    RuleDto rule = new RuleDto();
 	    rule.setContent(res);
 	    rule.setName(challengeSpec.getName());
-
-	    // write json
-	    ObjectMapper mapper = new ObjectMapper();
-	    try {
-		IOUtils.write(mapper.writeValueAsString(rule), fout);
-	    } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
+	    toWrite.add(rule);
 	}
+	// write result
+	// write json
+	ObjectMapper mapper = new ObjectMapper();
+	try {
+	    IOUtils.write(mapper.writeValueAsString(toWrite), fout);
+	} catch (IOException e) {
+	    System.err.println("Error in writing result " + e.getMessage());
+	}
+	// close stream
 	if (fout != null) {
 	    try {
 		fout.close();

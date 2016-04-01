@@ -1,4 +1,4 @@
-package eu.trentorise.game.challenges;
+package eu.trentorise.game.challenges.api;
 
 public final class Constants {
 
@@ -18,5 +18,6 @@ public final class Constants {
     public static final String CH_MODE = "ch_mode";
     public static final Object POINT_TYPE = "point_type";
     public static final String CH_POINT_TYPE = "ch_point_type";
+    public static final String RULE_PREFIX = "db://";
 
 }
