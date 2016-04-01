@@ -37,11 +37,11 @@ then
 		$train = 0d;
 	Long ptDistance = Math.round((Double)$bus + (Double)$train);
 	Integer ptPoints;
-	if (ptDistance > bus_threshold_step1 && ptDistance <= bus_threshold_step2)
+	if (ptDistance >= bus_threshold_step1 && ptDistance < bus_threshold_step2)
 		ptPoints = green_bus_points_step1;
-	else if (ptDistance > bus_threshold_step2 && ptDistance <= bus_threshold_step3)
+	else if (ptDistance >= bus_threshold_step2 && ptDistance < bus_threshold_step3)
 		ptPoints = green_bus_points_step2;
-	else if (ptDistance > bus_threshold_step3)
+	else if (ptDistance >= bus_threshold_step3)
 		ptPoints = green_bus_points_step3;
 	else
 		ptPoints = green_bus_points_base;

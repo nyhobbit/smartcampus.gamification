@@ -137,7 +137,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertNotNull(s);
 		
 		//Check point totals
-		assertionPoint(GAME, 587d, PLAYER_ID, "green leaves");
+		assertionPoint(GAME, 492d, PLAYER_ID, "green leaves");
 		
 		//Check leaderboard badge
 		assertionBadge(GAME,
@@ -176,7 +176,7 @@ public class LongGameTest extends GameTest {
 		Assert.assertEquals(1, s.getCustomData().get("car_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("bus_trips_past"));
 		Assert.assertEquals(1, s.getCustomData().get("train_trips_past"));
-		Assert.assertEquals(0, s.getCustomData().get("zero_impact_trips_past"));
+		Assert.assertEquals(null, s.getCustomData().get("zero_impact_trips_past"));
 
 	}
 }

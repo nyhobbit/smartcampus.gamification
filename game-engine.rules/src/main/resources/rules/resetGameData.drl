@@ -39,21 +39,21 @@ when
 then
 	log("resetting all past (i.e. periodic) counters to 0 for player" + (String)$playerId);
 	
-	$c.put("walk_km_past", (Double) 0.0);
-	$c.put("bike_km_past", (Double) 0.0);
-	$c.put("bikesharing_km_past", (Double) 0.0);
-	$c.put("bus_km_past", (Double) 0.0);
-	$c.put("train_km_past", (Double) 0.0);
-	$c.put("car_km_past", (Double) 0.0);
+	$c.remove("walk_km_past");
+	$c.remove("bike_km_past");
+	$c.remove("bikesharing_km_past");
+	$c.remove("bus_km_past");
+	$c.remove("train_km_past");
+	$c.remove("car_km_past");
 	
-	$c.put("walk_trips_past", 0);
-	$c.put("bike_trips_past", 0);
-	$c.put("bikesharing_trips_past", 0);
-	$c.put("bus_trips_past", 0);
-	$c.put("train_trips_past", 0);
-	$c.put("car_trips_past", 0);
-	$c.put("zero_impact_trips_past", 0);
-	$c.put("gp_current",0l);
+	$c.remove("walk_trips_past");
+	$c.remove("bike_trips_past");
+	$c.remove("bikesharing_trips_past");
+	$c.remove("bus_trips_past");
+	$c.remove("train_trips_past");
+	$c.remove("car_trips_past");
+	$c.remove("zero_impact_trips_past");
+	$c.remove("gp_current");
 	
 	update($c);
 end
