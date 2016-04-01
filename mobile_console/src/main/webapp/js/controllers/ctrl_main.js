@@ -3,8 +3,8 @@
 /* Controllers */
 var cpControllers = angular.module('cpControllers');
 
-cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootScope', 'localize', '$locale', '$dialogs', 'sharedDataService', '$filter', 'invokeWSService','invokeWSServiceProxy','invokePdfServiceProxy', 'invokeWSNiksServiceProxy','getMyMessages','$timeout',
-    function($scope, $http, $route, $routeParams, $rootScope, localize, $locale, $dialogs, sharedDataService, $filter, invokeWSService, invokeWSServiceProxy, invokePdfServiceProxy, invokeWSNiksServiceProxy, getMyMessages, $timeout) {
+cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootScope', 'localize', '$locale', '$dialogs', 'sharedDataService', '$filter', 'invokeWSService','invokeWSServiceProxy','invokePdfServiceProxy', 'invokeWSNiksServiceProxy','getMyMessages','$timeout', '$base64',
+    function($scope, $http, $route, $routeParams, $rootScope, localize, $locale, $dialogs, sharedDataService, $filter, invokeWSService, invokeWSServiceProxy, invokePdfServiceProxy, invokeWSNiksServiceProxy, getMyMessages, $timeout, $base64) {
 
     //$rootScope.frameOpened = false;
 	var cod_ente = "24";
@@ -48,6 +48,28 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 	$scope.CHAL_PT_GREEN_STRING = "Punti Green";
 	$scope.CHAL_PT_HEALTH_STRING = "Punti Salute";
 	$scope.CHAL_PT_PR_STRING = "Punti Park&Ride";
+	// badges_keys
+	$scope.BG_GREEN_POINT = "_point_green";
+	$scope.BG_BIKE_TRIP = "_bike_trip";
+	$scope.BG_BIKE_SHARING = "_BSstation";
+	$scope.BG_ZERO_IMPACT = "_zero_impact_trip";
+	$scope.BG_PUBLIC_TRANSPORT = "_pt_trip";
+	$scope.BG_PARK_AND_RIDE = "_parking";
+	$scope.BG_RECOMMENDATION = "_recommendations";
+	$scope.BG_SPECIAL_FIRST = "1stOfTheWeek";
+	$scope.BG_SPECIAL_SECOND = "2ndOfTheWeek";
+	$scope.BG_SPECIAL_THIRD = "3rdOfTheWeek";
+	// badges_collection_names
+	$scope.BCN_GREEN = "green leaves";
+	$scope.BCN_BIKE = "bike aficionado";
+	$scope.BCN_BIKE_SHARING = "bikesharing pioneer";
+	$scope.BCN_ZERO_IMPACT = "sustainable life";
+	$scope.BCN_PUBLIC_TRANSPORT = "public transport aficionado";
+	$scope.BCN_PARK_AND_RIDE = "park and ride pioneer";
+	$scope.BCN_RECOMMENDATION = "recommendations";
+	$scope.BCN_HEALTH = "health";
+	$scope.BCN_SPECIAL = "special";
+	
 	$scope.CHAL_TS_OFFSET = 1000 * 60 * 60 * 24 * 7;	// millis in a day (for test I use 7 days)
     $scope.MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
     var show_ch_details = false;
@@ -75,12 +97,61 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     
     $scope.userCF = sharedDataService.getUserIdentity(); 
     sharedDataService.setGameId(conf_gameid);
-    
     $scope.app ;
                   			
     $scope.citizenId = userId;
     $scope.user_token = token;
-                  			
+    $scope.basic_auth_user = conf_bauth_user;
+    $scope.basic_auth_password = conf_bauth_password;
+    
+    // Challenges minute description test
+    $scope.chall_desc_bike_km = conf_chall_desc_bike_km;
+    $scope.chall_desc_bike_share_km = conf_chall_desc_bike_share_km;
+    $scope.chall_desc_walk_km = conf_chall_desc_walk_km;
+    $scope.chall_desc_bike_share_trip = conf_chall_desc_bike_share_trip;
+    $scope.chall_desc_bus_trip = conf_chall_desc_bus_trip;
+    $scope.chall_desc_train_trip = conf_chall_desc_train_trip;
+    $scope.chall_desc_zero_impact_trip = conf_chall_desc_zero_impact_trip;
+    $scope.chall_desc_promoted_trip = conf_chall_desc_promoted_trip;
+    $scope.chall_desc_try_bikeshare_bus_train = conf_chall_desc_try_bike_bikeshare_bus_train;
+    $scope.chall_desc_top_x_week = conf_chall_desc_top_x_week;
+    $scope.chall_desc_park_ride_pioneer = conf_chall_desc_park_ride_pioneer;
+    $scope.chall_desc_bike_sharing_pioneer = conf_chall_desc_bike_sharing_pioneer;
+    $scope.chall_desc_recommentation = conf_chall_desc_recommendation;
+    $scope.chall_desc_green_bike_sharing_healt_zero_impact_pint = conf_chall_desc_green_bike_sharing_health_zero_impact_point;
+    $scope.chall_desc_next_badge_green = conf_chall_desc_next_badge_green;
+    $scope.chall_desc_next_badge_zero_impact = conf_chall_desc_next_badge_zero_impact;
+    $scope.chall_desc_next_badge_public_transport = conf_chall_desc_next_badge_public_transport;
+    $scope.chall_desc_next_badge_bike = conf_chall_desc_next_badge_bike;
+    $scope.chall_desc_next_badge_recommendation = conf_chall_desc_next_badge_recommendation;
+    $scope.chall_desc_complete_badge_collection = conf_chall_desc_complete_badge_collection;
+    
+    // Configure point type to show in pages
+    $scope.point_types = conf_point_types;
+    $scope.show_gpoint = false;
+    $scope.show_hpoint = false;
+    $scope.show_prpoint = false;
+    $scope.show_otherpoint = false;
+    $scope.show_specialpoint = false;
+    var p_types = conf_point_types.split(",");
+    for(var i = 0; i < p_types.length; i++){
+    	if(p_types[i] == "green leaves"){
+    		$scope.show_gpoint = true;
+    	}
+    	if(p_types[i] == "health"){
+    		$scope.show_hpoint = true;
+    	}
+    	if(p_types[i] == "pr"){
+    		$scope.show_prpoint = true;
+    	}
+    	if(p_types[i] == "others"){
+    		$scope.show_otherpoint = true;
+    	}
+    	if(p_types[i] == "special"){
+    		$scope.show_specialpoint = true;
+    	}
+    }
+    
     // new elements for view
     $scope.currentView;
     $scope.editMode;
@@ -154,12 +225,16 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     var activeLinkChalleng = "";
     var activeLinkClassification = "";
     var activeLinkRules = "";
+    var activeLinkPrivacy = "";
+    var activeLinkPrizes = "";
     
     $scope.showProfile = function(){
     	activeLinkProfile = "active";
     	activeLinkChalleng = "";
     	activeLinkClassification = "";
     	activeLinkRules = "";
+    	activeLinkPrivacy = "";
+    	activeLinkPrizes = "";
     };
     
     $scope.showChalleng = function(){
@@ -167,6 +242,8 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	activeLinkChalleng = "active";
     	activeLinkClassification = "";
     	activeLinkRules = "";
+    	activeLinkPrivacy = "";
+    	activeLinkPrizes = "";
     };
     
     $scope.showClassification = function(){
@@ -174,6 +251,8 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	activeLinkChalleng = "";
     	activeLinkClassification = "active";
     	activeLinkRules = "";
+    	activeLinkPrivacy = "";
+    	activeLinkPrizes = "";
     };
     
     $scope.showRules = function(){
@@ -181,6 +260,26 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	activeLinkChalleng = "";
     	activeLinkClassification = "";
     	activeLinkRules = "active";
+    	activeLinkPrivacy = "";
+    	activeLinkPrizes = "";	
+    };
+    
+    $scope.showPrivacy = function(){
+    	activeLinkProfile = "";
+    	activeLinkChalleng = "";
+    	activeLinkClassification = "";
+    	activeLinkRules = "";
+    	activeLinkPrivacy = "active";
+    	activeLinkPrizes = "";	
+    };
+    
+    $scope.showPrizes = function(){
+    	activeLinkProfile = "";
+    	activeLinkChalleng = "";
+    	activeLinkClassification = "";
+    	activeLinkRules = "";
+    	activeLinkPrivacy = "";
+    	activeLinkPrizes = "active";	
     };
     
     $scope.isActiveProfile = function(){
@@ -198,7 +297,15 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     $scope.isActiveRules = function(){
     	return activeLinkRules;
     };
-                  			
+    
+    $scope.isActivePrivacy = function(){
+    	return activeLinkPrivacy;
+    };
+    
+    $scope.isActivePrizes = function(){
+    	return activeLinkPrizes;
+    };
+    
     $scope.logout = function() {
     	// Clear some session variables
     	sharedDataService.setName(null);
@@ -221,6 +328,15 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
          'Authorization': $scope.getToken(),
          'Accept': 'application/json;charset=UTF-8'
     };
+    
+    $scope.getBasic = function() {
+        return 'Basic ' + $base64.encode($scope.basic_auth_user + ':' + $scope.basic_auth_password);
+    };
+    
+    $scope.authHeadersBasic = {
+            'Authorization': $scope.getBasic(),
+            'Accept': 'application/json;charset=UTF-8'
+       };
                   		    
     // ------------------- User section ------------------
     
@@ -275,6 +391,19 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
          { title:'P+R', index: 3, content:"partials/classifications/class_pr.html", disabled:false }
     ];
     
+    /*$scope.classTabs = [];
+    $scope.init_class = function(){
+        if($scope.show_gpoint){
+        	$scope.classTabs.push({ title:'Green Leaves', index: 1, content:"partials/classifications/class_green_leaves.html" });
+        }
+        if($scope.show_hpoint){
+        	$scope.classTabs.push({ title:'Health', index: 2, content:"partials/classifications/class_health.html", disabled:false });
+        }
+        if($scope.show_prpoint){
+        	$scope.classTabs.push({ title:'P+R', index: 3, content:"partials/classifications/class_pr.html", disabled:false });
+        }
+    }*/
+    
     $scope.setClassIndex = function($index){
         //$scope.tabEditIndex = $index;
         tabClassIndex = $index;
@@ -288,6 +417,7 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     var healthClass = "nav";
     var prClass = "nav";
     var specialClass = "nav";
+    var otherClass = "nav";
     
     $scope.activeProfTab = function(index){
     	switch(index){
@@ -296,42 +426,62 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     		healthClass = "nav";
     	    prClass = "nav";
     	    specialClass = "nav";
+    	    otherClass = "nav";
     	    $scope.isGreenActived = true;
     	    $scope.isHealthActived = false;
     	    $scope.isPRActived = false;
     	    $scope.isSpecialActived = false;
+    	    $scope.isOtherActived = false;
     		break;
     	case 1:
     		greenClass = "nav";
     		healthClass = "nav active";
     	    prClass = "nav";
     	    specialClass = "nav";
+    	    otherClass = "nav";
     	    $scope.isGreenActived = false;
     	    $scope.isHealthActived = true;
     	    $scope.isPRActived = false;
     	    $scope.isSpecialActived = false;
+    	    $scope.isOtherActived = false;
     	    break;
     	case 2:
     		greenClass = "nav";
     		healthClass = "nav";
     	    prClass = "nav active";
     	    specialClass = "nav";
+    	    otherClass = "nav";
     	    $scope.isGreenActived = false;
     	    $scope.isHealthActived = false;
     	    $scope.isPRActived = true;
     	    $scope.isSpecialActived = false;
+    	    $scope.isOtherActived = false;
     		break;
     	case 3:
     		greenClass = "nav";
     		healthClass = "nav";
     	    prClass = "nav";
     	    specialClass = "nav active";
+    	    otherClass = "nav";
     	    $scope.isGreenActived = false;
     	    $scope.isHealthActived = false;
     	    $scope.isPRActived = false;
     	    $scope.isSpecialActived = true;
+    	    $scope.isOtherActived = false;
     		break;
-    	}
+    	case 4:
+			greenClass = "nav";
+			healthClass = "nav";
+		    prClass = "nav";
+		    specialClass = "nav";
+		    otherClass = "nav active";
+		    $scope.isGreenActived = false;
+		    $scope.isHealthActived = false;
+		    $scope.isPRActived = false;
+		    $scope.isSpecialActived = false;
+		    $scope.isOtherActived = true;
+			break;
+		}
     };
     
     $scope.isGreenClass = function(){
@@ -349,17 +499,23 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     $scope.isSpecialClass = function(){
     	return specialClass;
     };
+    
+    $scope.isOtherClass = function(){
+    	return otherClass;
+    };
            
     $scope.profTabs = [ 
-         { title:'Green Leaves', index: 1, content:"partials/profiles/prof_green_leaves.html", activeClass:"active" },
+         { title:'Punti e Badge', index: 1, content:"partials/profiles/prof_points.html", activeClass:"active" },
          { title:'Health', index: 2, content:"partials/profiles/prof_health.html", activeClass:"", disabled:false },
          { title:'P+R', index: 3, content:"partials/profiles/prof_pr.html", activeClass:"", disabled:false },
-         { title:'Special', index: 4, content:"partials/profiles/prof_special.html", activeClass:"", disabled:false }
+         { title:'Special', index: 4, content:"partials/profiles/prof_special.html", activeClass:"", disabled:false },
+         { title:'Others', index: 5, content:"partials/profiles/prof_other.html", activeClass:"", disabled:false },
+         { title:'Challenge', index: 6, content:"partials/challeng.html", activeClass:"", disabled:false },
+         { title:'Classifica', index: 7, content:"partials/classification.html", activeClass:"", disabled:false }
     ];
     
     $scope.setProfIndex = function($index){
     	$scope.profTabs[tabProfIndex].activeClass = "";
-        //$scope.tabEditIndex = $index;
         tabProfIndex = $index;
         $scope.profTabs[tabProfIndex].activeClass = "active";
     };
@@ -379,6 +535,32 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     $scope.sTypes = sharedDataService.getScoreTypes();
     $scope.scoreTypes = "green leaves";
     
+    $scope.openInfoChPanel = function(ch){
+    	var msg_to_show = "";
+    	switch(ch.type){
+    		case "ch1": 
+    			if(ch.mobilityMode == $scope.CHAL_ALLOWED_MODE_BK){
+    				msg_to_show=$scope.chall_desc_bike_km;
+    			} else if(ch.mobilityMode == $scope.CHAL_ALLOWED_MODE_BKS){
+    				msg_to_show=$scope.chall_desc_bike_share_km;
+    			} else if(ch.mobilityMode == $scope.CHAL_ALLOWED_MODE_W){
+    				msg_to_show=$scope.chall_desc_walk_km;
+    			}
+    			break;
+    		case "ch3": 
+    			msg_to_show=$scope.chall_desc_bike_share_trip;
+    			break;
+    		case "ch7": 
+    			msg_to_show=$scope.chall_desc_complete_badge_collection;
+    			break;
+    		case "ch9": 
+    			var racc_num = ch.target;
+    			msg_to_show=$scope.chall_desc_recommentation.replace("X", ch.target);
+    			break;
+    	}
+    	$dialogs.notify("INFORMAZIONI UTILI", msg_to_show);
+    };
+    
     $scope.setLoading = function(value){
     	$scope.isLoading = value;
     };
@@ -397,6 +579,7 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 	    		$scope.getProfilesData(gameId);
 	    	});
     	}
+    	$scope.gameId = gameId;
     };
     
     $scope.getChalleng = function(gameId){
@@ -409,7 +592,7 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	var method = 'GET';
     	var params = null;
     	var wsRestUrl = "state/" + gameId + "/" + $scope.userId;
-    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeaders, null);
+    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeadersBasic, null);
     	myDataPromise.then(function(result){
     		$scope.correctProfileData(result);
     		$scope.showProfile();
@@ -421,7 +604,7 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	var method = 'GET';
     	var params = null;
     	var wsRestUrl = "state/" + gameId + "/" + $scope.userId;
-    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeaders, null);
+    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeadersBasic, null);
     	myDataPromise.then(function(result){
     		if(result.customData){
     			$scope.correctCustomData(result.customData);
@@ -436,12 +619,38 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	var method = 'GET';
     	var params = null;
     	var wsRestUrl = "state/" + gameId;
-    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeaders, null);
+    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeadersBasic, null);
     	myDataPromise.then(function(result){
     		$scope.correctClassificationData(result);
     		$scope.showClassification();
     	});
     };
+    
+    // Method used to insert the user raccomandation in the gamification-engine
+    $scope.setRaccomandationData = function(nick_social_id){
+    	/*POST /gamification/gengine/execute
+    	HTTP Header Content-Type : application/json
+    	BODY
+    	{ "gameId": "<GAMEID>,
+    	  "actionId": "app_sent_recommandation"
+    	  "playerId": "<ID DI CHI HA RACCOMANDATO APP>"
+    	}*/
+    	var gameId = sharedDataService.getGameId();
+    	var method = 'POST';
+    	var params = null;
+    	//var wsRestUrl = "gengine/execute";
+    	var wsRestUrl = "execute";
+    	var data = {
+        	gameId: gameId,
+        	actionId: "app_sent_recommandation",
+        	playerId: nick_social_id
+        };
+    	var value = JSON.stringify(data);
+    	var myDataPromise = invokeWSServiceProxy.getProxy(method, wsRestUrl, params, $scope.authHeadersBasic, value);
+    	myDataPromise.then(function(result){
+    		console.log("Result from post raccomandation " + result);
+    	});
+    }
     
     // Method used to retrieve all users niks
     $scope.getNiks = function(id) {
@@ -577,6 +786,10 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 			$scope.myNick = user.nickname;
 			sharedDataService.setNickName(user.nickname);
 			$scope.updateNiks(user);		// commented for test
+			if(user.invitation != null && user.invitation != "") {
+				var rec_player = $scope.retrievePlayerFromNick(user.invitation);
+				$scope.setRaccomandationData(rec_player.socialId);	// WS call to gamification engine to update the recommendation numbers
+			}
 		});
     };
     
@@ -592,7 +805,9 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     				scores : scores
     		};
     		angular.copy(playerData, $scope.userProfile);
-    		$scope.checkBadges($scope.userProfile.badges);
+    		console.log(JSON.stringify(playerData));
+    		var badgesStrings = $scope.checkBadges($scope.userProfile.badges);
+    		$scope.profileDataToString(scores, badgesStrings[0], badgesStrings[1]);
     	}
     	$scope.setLoading(false);
     };
@@ -603,6 +818,29 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     
     $scope.loadActualChallenges = function(){
     	$scope.actualChellenges = true;
+    };
+    
+    $scope.profileDataToString = function(scores, b_string_fb, b_string_tw){
+    	// here I have to create the correct string representing the user profile situation
+    	var pointString = " " + scores[0].score + " punti green; ";
+    	var profileStringFb = pointString + b_string_fb;
+    	var profileStringTw = pointString + b_string_tw;
+    	$scope.text_fb = "Green Game Rovereto: " + profileStringFb;
+        $scope.text_tw = "Green Game Rovereto: " + profileStringTw + " #greengamerovereto";
+        //$scope.text_gp = "Green Game Rovereto: " + profileString;
+    };
+    
+    $scope.retrievePlayerFromNick = function(invitation){
+    	var found = false;
+    	var player = {};
+    	var playerList = sharedDataService.getPlayersList();
+		for(var i = 0; (i < playerList.length) && !found; i++){
+			if(playerList[i].nikName == invitation){
+				player = playerList[i];
+				found = true;
+			}
+		}
+		return player;
     };
     
     // Method used to load only the custom data from the user profile data
@@ -658,6 +896,7 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     						startChTs: customdata[$scope.CHAL_K + ch_id + $scope.CHAL_K_STS],
     						endChTs: endChTs,
     						daysToEnd: daysToEnd,
+    						mobilityMode: mobility_mode,
     						Km_walked_during_challenge: walked_km,
     						target: target,
     						bonus: bonus,
@@ -1012,19 +1251,35 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	var badges_green = {};
     	var badges_health = {};
     	var badges_pr = {};
+    	var badges_zero_impact = {};
+    	var badges_public_transport = {};
+    	var badges_bike = {};
+    	var badges_recommendation = {};
+    	var badges_bike_sharing = {};
     	var badges_special = {};
     	if(badge_list){
 	    	for(var i = 0; i < badge_list.length; i++){
 	    		if(badge_list[i].badgeEarned != null){ 
-	    			if(badge_list[i].name == "green leaves"){
+	    			if(badge_list[i].name == $scope.BCN_GREEN){
 	    				badges_green = badge_list[i];
-	    			} else if(badge_list[i].name == "health"){
+	    			} else if(badge_list[i].name == $scope.BCN_HEALTH){
 	    				badges_health = badge_list[i];
-	    			} else if(badge_list[i].name == "p+r"){
+	    			} else if(badge_list[i].name == $scope.BCN_PARK_AND_RIDE){
 	    				badges_pr = badge_list[i];
-	    			} else if(badge_list[i].name == "special"){
+	    			} else if(badge_list[i].name == $scope.BCN_SPECIAL){
 	    				badges_special = badge_list[i];
+	    			} else if(badge_list[i].name == $scope.BCN_BIKE){
+	    				badges_bike = badge_list[i];
+	    			} else if(badge_list[i].name == $scope.BCN_BIKE_SHARING){
+	    				badges_bike_sharing = badge_list[i];
+	    			} else if(badge_list[i].name == $scope.BCN_ZERO_IMPACT){
+	    				badges_zero_impact = badge_list[i];
+	    			} else if(badge_list[i].name == $scope.BCN_PUBLIC_TRANSPORT){
+	    				badges_public_transport = badge_list[i];
+	    			} else if(badge_list[i].name == $scope.BCN_RECOMMENDATION){
+	    				badges_recommendation = badge_list[i];
 	    			}
+	    			
 	    		}
 	    	}
     	}
@@ -1033,6 +1288,11 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	badges.splice(1, 0, badges_health);
     	badges.splice(2, 0, badges_pr);
     	badges.splice(3, 0, badges_special);
+    	badges.splice(4, 0, badges_bike);				//bike
+    	badges.splice(5, 0, badges_bike_sharing);		//bike sharing
+    	badges.splice(6, 0, badges_zero_impact);		//zero impact
+    	badges.splice(7, 0, badges_public_transport);	//public transport
+    	badges.splice(8, 0, badges_recommendation);		//recommendation
   	
     	return badges;
     };
@@ -1168,6 +1428,15 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     // ------------------------------------------------------------------------------------------------------------------------------------
     
     $scope.checkBadges = function(list){
+    	var greenBadges = 0;
+    	var bikeTripBadges = 0;
+    	var bikeShareBadges = 0;
+    	var zeroImpactBadges = 0;
+    	var publicTransportBadges = 0;
+    	var parkRideBadges = 0;
+    	var recommendationBadges = 0;
+    	var leaderBoardBadges = 0;
+    	
     	$scope.userShowGreenGoldMedal = false;
     	$scope.userShowGreenSilverMedal = false;
     	$scope.userShowGreenBronzeMedal = false;
@@ -1194,6 +1463,60 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	$scope.userShowSpecialWalking = false;
     	$scope.userNoSpecialBadge = false;
     	
+    	// Green Leaves badges
+    	$scope.userShowGreenLeaves50 = false;
+    	$scope.userShowGreenLeaves100 = false;
+    	$scope.userShowGreenLeaves200 = false;
+    	$scope.userShowGreenLeaves400 = false;
+    	$scope.userShowGreenLeaves800 = false;
+    	$scope.userShowGreenLeaves1500 = false;
+    	$scope.userShowGreenLeaves2500 = false;
+    	$scope.userShowGreenLeaves5000 = false;
+    	
+    	// Bike aficionado
+    	$scope.userShowBikeTrip1 = false;
+    	$scope.userShowBikeTrip5 = false;
+    	$scope.userShowBikeTrip10 = false;
+    	$scope.userShowBikeTrip25 = false;
+    	$scope.userShowBikeTrip50 = false;
+    	
+    	// Bike sharing
+    	$scope.userShowBikeSharingPark1 = false;
+    	$scope.userShowBikeSharingPark2 = false;
+    	$scope.userShowBikeSharingPark3 = false;
+    	$scope.userShowBikeSharingPark4 = false;
+    	
+    	// Zero impact
+    	$scope.userShowZeroImpact1 = false;
+    	$scope.userShowZeroImpact5 = false;
+    	$scope.userShowZeroImpact10 = false;
+    	$scope.userShowZeroImpact25 = false;
+    	$scope.userShowZeroImpact50 = false;
+    	
+    	// Public transport aficionado
+    	$scope.userShowPublicTransport5 = false;
+    	$scope.userShowPublicTransport10 = false;
+    	$scope.userShowPublicTransport25 = false;
+    	$scope.userShowPublicTransport50 = false;
+    	$scope.userShowPublicTransport100 = false;
+    	
+    	// Park And Ride pioneer
+    	$scope.userShowParkAndRideStadio = false;
+    	$scope.userShowParkAndRideManifattura = false;
+    	
+    	// Recommendation
+    	$scope.userShowRecommendation3 = false;
+    	$scope.userShowRecommendation5 = false;
+    	$scope.userShowRecommendation10 = false;
+    	$scope.userShowRecommendation25 = false;
+    	
+    	// Special leaderboard
+    	$scope.userShowFirstOfWeek = false;
+    	$scope.userShowSecondOfWeek = false;
+    	$scope.userShowThirdOfWeek = false;
+    	
+    	var badgeString = "badge guadagnati: ";
+    	
     	if(list != null && list.length > 0){
     		if(list[0].badgeEarned){
 	    		for(var i = 0; i < list[0].badgeEarned.length; i++){
@@ -1209,7 +1532,47 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 	    					break;
 	    				case "king-week-green" :
 	    					$scope.userShowGreenKingWeek = true;
-	    					break;	
+	    					break;
+	    				case "50" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves50 = true;
+	    					badgeString += "50 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "100" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves100 = true;
+	    					badgeString += "100 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "200" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves200 = true;
+	    					badgeString += "200 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "400" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves400 = true;
+	    					badgeString += "400 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "800" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves800 = true;
+	    					badgeString += "800 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "1500" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves1500 = true;
+	    					badgeString += "1500 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "2500" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves2500 = true;
+	    					badgeString += "2500 punti green, ";
+	    					greenBadges += 1;
+	    					break;
+	    				case "5000" + $scope.BG_GREEN_POINT :
+	    					$scope.userShowGreenLeaves5000 = true;
+	    					badgeString += "5000 punti green, ";
+	    					greenBadges += 1;
+	    					break;
 	    				default: 
 	    					break;
 	    			}
@@ -1238,6 +1601,16 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     		if(list[2].badgeEarned){
 	    		for(var i = 0; i < list[2].badgeEarned.length; i++){
 	    			switch(list[2].badgeEarned[i]){
+		    			case "Stadio" + $scope.BG_PARK_AND_RIDE :
+	    					$scope.userShowParkAndRideStadio = true;
+	    					badgeString += "Parcheggio-Stadio, ";
+	    					parkRideBadges += 1;
+	    					break;
+	    				case "Manifattura" + $scope.BG_PARK_AND_RIDE :
+	    					$scope.userShowParkAndRideManifattura = true;
+	    					badgeString += "Parcheggio-Manifattura, ";
+	    					parkRideBadges += 1;
+	    					break;
 	    				case "gold-medal-pr" :
 	    					$scope.userShowPRGoldMedal = true;
 	    					break;
@@ -1270,20 +1643,23 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 	    				case "walking" :
 	    					$scope.userShowSpecialWalking = true;
 	    					break;
-	    				case "Ex Manifattura-park" :
+	    				/*case "MANIFATTURA-park" :
 	    					$scope.userShowManifatturaPark = true;
+	    					badgeString += "Parcheggio-Manifattura, ";
 	    					break;
-	    				case "Stadio-park" :
+	    				case "STADIO-park" :
 	    					$scope.userShowQuerciaPark = true;
+	    					badgeString += "Parcheggio-Stadio, ";
 	    					break;
-	    				case "Centro Storico-park" :
+	    				case "CENTRO STORICO-park" :
 	    					$scope.userShowCentroStoricoPark = true;
 	    					break;
-	    				case "Parcheggio Centro-park" :
+	    				case "PARCHEGGIO CENTRO-park" :
 	    			    	$scope.userShowParcheggioCentroPark = true;
 	    					break;
-	    				case "P.le A.Leoni-park" :
-	    			    	$scope.userShowALeoniPark = true;
+	    				case "P.LE A.LEONI-park" :
+	    			    	$scope.userShowALeoniPark = true;	
+	    			    	break;*/	
 	    				default: 
 	//    					if(list[3].badgeEarned[i].indexOf("-park") > -1){
 	//    						$scope.userShowPark = true;
@@ -1297,7 +1673,160 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
 	    			$scope.userNoSpecialBadge = true;
 	    		}
     		}
+    		// bike
+    		if(list[4].badgeEarned){
+	    		for(var i = 0; i < list[4].badgeEarned.length; i++){
+	    			switch(list[4].badgeEarned[i]){
+		    			case "1" + $scope.BG_BIKE_TRIP :
+	    					$scope.userShowBikeTrip1 = true;
+	    					badgeString += "1 viaggio in bici, ";
+	    					bikeTripBadges += 1;
+	    					break;
+	    				case "5" + $scope.BG_BIKE_TRIP :
+	    					$scope.userShowBikeTrip5 = true;
+	    					badgeString += "5 viaggio in bici, ";
+	    					bikeTripBadges += 1;
+	    					break;
+	    				case "10" + $scope.BG_BIKE_TRIP :
+	    					$scope.userShowBikeTrip10 = true;
+	    					badgeString += "10 viaggio in bici, ";
+	    					bikeTripBadges += 1;
+	    					break;
+	    				case "25" + $scope.BG_BIKE_TRIP :
+	    					$scope.userShowBikeTrip25 = true;
+	    					badgeString += "25 viaggio in bici, ";
+	    					bikeTripBadges += 1;
+	    					break;
+	    				case "50" + $scope.BG_BIKE_TRIP :
+	    					$scope.userShowBikeTrip50 = false;
+	    					bikeTripBadges += "50 viaggio in bici, ";
+	    					bikeShareBadges += 1;
+	    					break;
+	    				default: break;
+	    			}
+	    		}
+    		}
+    		// bike sharing
+    		if(list[5].badgeEarned){
+	    		for(var i = 0; i < list[5].badgeEarned.length; i++){
+	    			switch(list[5].badgeEarned[i]){
+	    				default: break;
+	    			}
+	    		}
+    		}
+    		// zero impact
+    		if(list[6].badgeEarned){
+	    		for(var i = 0; i < list[6].badgeEarned.length; i++){
+	    			switch(list[6].badgeEarned[i]){
+		    			case "1" + $scope.BG_ZERO_IMPACT :
+	    					$scope.userShowZeroImpact1 = true;
+	    					badgeString += "1 viaggi a impatto zero, ";
+	    					zeroImpactBadges += 1;
+	    					break;
+	    				case "5" + $scope.BG_ZERO_IMPACT :
+	    					$scope.userShowZeroImpact5 = true;
+	    					badgeString += "5 viaggi a impatto zero, ";
+	    					zeroImpactBadges += 1;
+	    					break;
+	    				case "10" + $scope.BG_ZERO_IMPACT :
+	    					$scope.userShowZeroImpact10 = true;
+	    					badgeString += "10 viaggi a impatto zero, ";
+	    					zeroImpactBadges += 1;
+	    					break;
+	    				case "25" + $scope.BG_ZERO_IMPACT :
+	    					$scope.userShowZeroImpact25 = true;
+	    					badgeString += "25 viaggi a impatto zero, ";
+	    					zeroImpactBadges += 1;
+	    					break;
+	    				case "50" + $scope.BG_ZERO_IMPACT :
+	    					$scope.userShowZeroImpact50 = true;
+	    					badgeString += "50 viaggi a impatto zero, ";
+	    					zeroImpactBadges += 1;
+	    					break;
+	    				default: break;
+	    			}
+	    		}
+    		}
+    		// public transport
+    		if(list[7].badgeEarned){
+	    		for(var i = 0; i < list[7].badgeEarned.length; i++){
+	    			switch(list[7].badgeEarned[i]){
+		    			case "5" + $scope.BG_PUBLIC_TRANSPORT :
+	    					$scope.userShowPublicTransport5 = true;
+	    					badgeString += "5 viaggi trasporto pubblico, ";
+	    					publicTransportBadges += 1;
+	    					break;
+	    				case "10" + $scope.BG_PUBLIC_TRANSPORT :
+	    					$scope.userShowPublicTransport10 = true;
+	    					badgeString += "10 viaggi trasporto pubblico, ";
+	    					publicTransportBadges += 1;
+	    					break;
+	    				case "25" + $scope.BG_PUBLIC_TRANSPORT :
+	    					$scope.userShowPublicTransport25 = true;
+	    					badgeString += "25 viaggi trasporto pubblico, ";
+	    					publicTransportBadges += 1;
+	    					break;
+	    				case "50" + $scope.BG_PUBLIC_TRANSPORT :
+	    					$scope.userShowPublicTransport50 = true;
+	    					badgeString += "50 viaggi trasporto pubblico, ";
+	    					publicTransportBadges += 1;
+	    					break;
+	    				case "100" + $scope.BG_PUBLIC_TRANSPORT :
+	    					$scope.userShowPublicTransport100 = true;
+	    					badgeString += "100 viaggi trasporto pubblico, ";
+	    					publicTransportBadges += 1;
+	    					break;
+	    				default: break;
+	    			}
+	    		}
+    		}
+    		// recommendation
+    		if(list[8].badgeEarned){
+	    		for(var i = 0; i < list[8].badgeEarned.length; i++){
+	    			switch(list[8].badgeEarned[i]){
+		    			case "3" + $scope.BG_RECOMMENDATION :
+	    					$scope.userShowRecommendation3 = true;
+	    					badgeString += "3 amici invitati, ";
+	    					recommendationBadges += 1;
+	    					break;
+	    				case "5" + $scope.BG_RECOMMENDATION :
+	    					$scope.userShowRecommendation5 = true;
+	    					badgeString += "5 amici invitati, ";
+	    					recommendationBadges += 1;
+	    					break;
+	    				case "10" + $scope.BG_RECOMMENDATION :
+	    					$scope.userShowRecommendation10 = true;
+	    					badgeString += "10 amici invitati, ";
+	    					recommendationBadges += 1;
+	    					break;
+	    				case "25" + $scope.BG_RECOMMENDATION :
+	    					$scope.userShowRecommendation25 = true;
+	    					badgeString += "25 amici invitati, ";
+	    					recommendationBadges += 1;
+	    					break;
+	    				default: break;
+	    			}
+	    		}
+    		}
     	}
+    	if(badgeString.length == 18){
+    		badgeString = "";
+    	} else {
+    		//badgeString = badgeString.substring(0, badgeString.length - 2);
+    		badgeString = "badge guadagnati: ";
+    	}
+    	var badgeStringFB = "";
+    	var badgeStringTW = "";
+    	if(badgeString != ""){
+    		var totalValue = Number(greenBadges) + Number(bikeTripBadges) + Number(bikeShareBadges) + Number(zeroImpactBadges) + Number(publicTransportBadges) + Number(parkRideBadges) + Number(recommendationBadges) + Number(leaderBoardBadges);
+    		badgeStringFB = badgeString + greenBadges + " badges green, " + bikeTripBadges + " badges bike trip, " + bikeShareBadges + " badges bike share, " + zeroImpactBadges + " badges zero impact, " + publicTransportBadges + " badges public transport, " + parkRideBadges + " badges park&ride, " + recommendationBadges + " badges recommendation, " + leaderBoardBadges + " badges leader boards;";
+    		badgeStringTW = badgeString + totalValue + " badges totali ";
+    	}
+    	var allBadges = [];
+    	allBadges.push(badgeStringFB);
+    	allBadges.push(badgeStringTW);
+    	
+    	return allBadges;
     };
     
     // ----------------------------------- WS Section End ----------------------------------
@@ -1401,7 +1930,33 @@ cp.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     };
       
     $scope.utenteCS = sharedDataService.getUtente();
-                  			
+    
+    $scope.callback = function(response){
+        console.log(response);
+        //alert('share callback');
+    };
+    
+    $scope.image_url = "https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/256x256/plain/leaf.png";//"https://dev.smartcommunitylab.it/gamificationweb/img/foglia.svg";
+    $scope.url = "https://dev.smartcommunitylab.it/gamificationweb/profile";
+    //$scope.url = "http://localhost:8080/gamificationweb/profile";
+    $scope.title = "Rovereto Green Game";
+    $scope.caption = "Green Game";
+    /* $scope.text_fb = "Green Game: punteggio attuale 50 punti, badges raggiunti: 10, 50 punti";
+    $scope.text_tw = "Green Game: punteggio attuale 50 punti, badges raggiunti: 10, 50 punti";
+    $scope.text_gp = "Green Game: punteggio attuale 50 punti, badges raggiunti: 10, 50 punti";*/
+    $scope.getTextFb_ch = function(ch){
+    	return "Vinta la challenge: '" + ch.desc + "'";
+    };
+    $scope.getTextTw_ch = function(ch){
+    	return "Vinta la challenge: '" + ch.desc + "' #greengamechallenges";
+    };
+    $scope.getPosFb_class = function(position){
+    	return "GreenGame: " + position.score[0].score + " punti, posizione in classifica: " + position.class_pos_g + "^ posto";
+    };
+    $scope.getPosTw_class = function(position){
+    	return "#GreenGame: " + position.score[0].score + " punti, posizione in classifica: " + position.class_pos_g + "^ posto";
+    };
+    
 }]);
 cp.controller('nicknameDialogCtrl',function($scope,$modalInstance,data){
 	//-- Variables --//
@@ -1443,7 +1998,16 @@ cp.controller('nicknameDialogCtrl',function($scope,$modalInstance,data){
 			$scope.errorMessages = "";
 			// check if nick already present
 			if(!$scope.checkIfNickAlreadyPresent($scope.user.nickname)){
-				$modalInstance.close($scope.user);	// pass all the form data to the main controller
+				if($scope.user.invitation != null && $scope.user.invitation != ""){
+					if($scope.checkIfNickAlreadyPresent($scope.user.invitation)){
+						$modalInstance.close($scope.user);	// pass all the form data to the main controller
+					} else {
+						$scope.showInvitationMessages = true;
+						$scope.errorInvitationMessages = "Nickname non trovato. Contatta chi ti ha invitato al gioco per avere il nickname corretto."
+					}
+				} else {
+					$modalInstance.close($scope.user);	// pass all the form data to the main controller
+				}
 			} else {
 				$scope.showMessages = true;
 				$scope.errorMessages = "Nickname gia' usato da un altro utente. Scegli un altro nick che ti rappresenti."

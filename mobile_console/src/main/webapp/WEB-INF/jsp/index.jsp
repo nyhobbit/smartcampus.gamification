@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="cp">
+<html ng-app="cp" itemscope itemtype="http://schema.org/Article">
 <head id="myHead" lang="it">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,15 @@
 <link href="css/xeditable.css" rel="stylesheet">
 <link href="css/modaldialog.css" rel="stylesheet">
 <link href="css/gg_style.css" rel="stylesheet">
+<link href="css/angular-socialshare.css" rel="stylesheet">
 <link href="img/gamification.ico" rel="shortcut icon" type="image/x-icon" />
 
 <!-- required libraries -->
+<!-- <script src="http://platform.tumblr.com/v1/share.js"></script> -->
+<script src="https://apis.google.com/js/platform.js" async defer>
+    {lang: 'it'}
+</script>
+<script src="https://platform.twitter.com/widgets.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="lib/angular.js"></script>
@@ -20,6 +26,7 @@
 <script src="js/dialogs.min.js" type="text/javascript"></script>
 <script src="lib/angular-route.js"></script>
 <script src="lib/angular-sanitize.js"></script>
+<script src="lib/angular-socialshare.js"></script>
 
 <script src="i18n/angular-locale_it-IT.js"></script>
 <!-- <script src="i18n/angular-locale_en-EN.js"></script> -->
@@ -57,6 +64,29 @@ var userId="<%=request.getAttribute("user_id")%>";
 var user_name="<%=request.getAttribute("user_name")%>";
 var user_surname="<%=request.getAttribute("user_surname")%>";
 var conf_gameid="<%=request.getAttribute("gameid")%>";
+var conf_bauth_user="<%=request.getAttribute("bauth_user")%>";
+var conf_bauth_password="<%=request.getAttribute("bauth_password")%>";
+var conf_point_types="<%=request.getAttribute("point_types")%>";
+var conf_chall_desc_bike_km="<%=request.getAttribute("chall_desc_bike_km")%>";
+var conf_chall_desc_bike_share_km="<%=request.getAttribute("chall_desc_bike_share_km")%>";
+var conf_chall_desc_walk_km="<%=request.getAttribute("chall_desc_walk_km")%>";
+var conf_chall_desc_bike_share_trip="<%=request.getAttribute("chall_desc_bike_share_trip")%>";
+var conf_chall_desc_bus_trip="<%=request.getAttribute("chall_desc_bus_trip")%>";
+var conf_chall_desc_train_trip="<%=request.getAttribute("chall_desc_train_trip")%>";
+var conf_chall_desc_zero_impact_trip="<%=request.getAttribute("chall_desc_zero_impact_trip")%>";
+var conf_chall_desc_promoted_trip="<%=request.getAttribute("chall_desc_promoted_trip")%>";
+var conf_chall_desc_try_bike_bikeshare_bus_train="<%=request.getAttribute("chall_desc_try_bike_bikeshare_bus_train")%>";
+var conf_chall_desc_top_x_week="<%=request.getAttribute("chall_desc_top_x_week")%>";
+var conf_chall_desc_park_ride_pioneer="<%=request.getAttribute("chall_desc_park_ride_pioneer")%>";
+var conf_chall_desc_bike_sharing_pioneer="<%=request.getAttribute("chall_desc_bike_sharing_pioneer")%>";
+var conf_chall_desc_recommendation="<%=request.getAttribute("chall_desc_recommendation")%>";
+var conf_chall_desc_green_bike_sharing_health_zero_impact_point="<%=request.getAttribute("chall_desc_green_bike_sharing_health_zero_impact_point")%>";
+var conf_chall_desc_next_badge_green="<%=request.getAttribute("chall_desc_next_badge_green")%>";
+var conf_chall_desc_next_badge_zero_impact="<%=request.getAttribute("chall_desc_next_badge_zero_impact")%>";
+var conf_chall_desc_next_badge_public_transport="<%=request.getAttribute("chall_desc_next_badge_public_transport")%>";
+var conf_chall_desc_next_badge_bike="<%=request.getAttribute("chall_desc_next_badge_bike")%>";
+var conf_chall_desc_next_badge_recommendation="<%=request.getAttribute("chall_desc_next_badge_recommendation")%>";
+var conf_chall_desc_complete_badge_collection="<%=request.getAttribute("chall_desc_complete_badge_collection")%>";
 var user_mail="<%=request.getAttribute("e_mail")%>";
 var nome="<%=request.getAttribute("nome")%>";
 var cognome="<%=request.getAttribute("cognome")%>";
@@ -160,7 +190,10 @@ var base64="<%=request.getAttribute("base64")%>";
 	    }
 	});
   </script>
-
+  <!-- Posiziona questo tag all'interno del tag head oppure subito prima della chiusura del tag body. -->
+	<!-- Aggiungi i tre tag seguenti all'interno del tag head. -->
+	<meta itemprop="name" content="GreenGame Rovereto">
+	<meta itemprop="image" content="img/foglia.svg">
 </head>
 
 <body>
@@ -179,21 +212,17 @@ var base64="<%=request.getAttribute("base64")%>";
             	</a>
             </li> 
             
-            <li class="{{ isActiveProfile() }}"><a href="#/profile/{{ gameId }}" ng-click="showProfile()" >{{ 'left_menu-profile' | i18n }}</a></li>
-            <li class="{{ isActiveChalleng() }}"><a href="#/challeng/{{ gameId }}" ng-click="showChalleng()" ><strong>{{ 'left_menu-challeng' | i18n }}</strong></a></li>
-            <li class="{{ isActiveClassification() }}"><a href="#/classification/{{ gameId }}" ng-click="showClassification()" >{{ 'left_menu-classification' | i18n }}</a></li>
+            <li ng-if="!disableAllLinks" class="{{ isActiveProfile() }}"><a href="#/profile/{{ gameId }}" ng-click="showProfile()" >{{ 'left_menu-profile' | i18n }}</a></li>
+           <!--  <li ng-if="!disableAllLinks" class="{{ isActiveChalleng() }}"><a href="#/challeng/{{ gameId }}" ng-click="showChalleng()" ><strong>{{ 'left_menu-challeng' | i18n }}</strong></a></li>
+            <li ng-if="!disableAllLinks" class="{{ isActiveClassification() }}"><a href="#/classification/{{ gameId }}" ng-click="showClassification()" >{{ 'left_menu-classification' | i18n }}</a></li> -->
             <li class="{{ isActiveRules() }}"><a href="#/rules" ng-click="showRules()" >{{ 'left_menu-rules' | i18n }}</a></li>
+            <li class="{{ isActivePrivacy() }}"><a href="#/privacy" ng-click="showPrivacy()" >{{ 'left_menu-privacy' | i18n }}</a></li>
+            <li class="{{ isActivePrizes() }}"><a href="#/prizes" ng-click="showPrizes()" >{{ 'left_menu-prizes' | i18n }}</a></li>
             
           </ul>
           <ul class="nav navbar-nav navbar-right" >
 			<!-- <li class="{{ isActiveItaLang() }}"><a href ng-click="setItalianLanguage()">IT</a></li> -->
 			<!-- <li class="{{ isActiveEngLang() }}"><a href ng-click="setEnglishLanguage()">EN</a></li> -->
-<!--             <li class="active" > -->
-<!--             	<a> -->
-<!--             		<span class="glyphicon glyphicon-user"></span> -->
-<!--             		{{ getUserName() }} {{ getUserSurname() }} -->
-<!--             	</a> -->
-<!--             </li> --> 
             <li><a href="logout" ng-click="logout()">{{ 'menu_bar-logout' | i18n }}</a></li><!-- ng-click="logout()" -->
           </ul>
         </div><!-- /.nav-collapse -->
@@ -215,9 +244,11 @@ var base64="<%=request.getAttribute("base64")%>";
 			            	</a>
 			            	<ul class="dropdown-menu" role="menu">
 			            		<li class="{{ isActiveProfile() }}"><a href="#/profile/{{ gameId }}" ng-click="showProfile()" ><strong>{{ 'left_menu-profile' | i18n }}</strong></a></li>
-			            		<li class="{{ isActiveChalleng() }}"><a href="#/challeng/{{ gameId }}" ng-click="showChalleng()" ><strong>{{ 'left_menu-challeng' | i18n }}</strong></a></li>
-			            		<li class="{{ isActiveClassification() }}"><a href="#/classification/{{ gameId }}" ng-click="showClassification()" ><strong>{{ 'left_menu-classification' | i18n }}</strong></a></li>
+			            		<!-- <li class="{{ isActiveChalleng() }}"><a href="#/challeng/{{ gameId }}" ng-click="showChalleng()" ><strong>{{ 'left_menu-challeng' | i18n }}</strong></a></li>
+			            		<li class="{{ isActiveClassification() }}"><a href="#/classification/{{ gameId }}" ng-click="showClassification()" ><strong>{{ 'left_menu-classification' | i18n }}</strong></a></li> -->
 			            		<li class="{{ isActiveRules() }}"><a href="#/rules" ng-click="showRules()" ><strong>{{ 'left_menu-rules' | i18n }}</strong></a></li>
+            					<li class="{{ isActivePrivacy() }}"><a href="#/privacy" ng-click="showPrivacy()" ><strong>{{ 'left_menu-privacy' | i18n }}</strong></a></li>
+            					<li class="{{ isActivePrizes() }}"><a href="#/prizes" ng-click="showPrizes()" ><strong>{{ 'left_menu-prizes' | i18n }}</strong></a></li>
 								<!-- <li class="divider"></li> -->
 								<!-- <li class="{{ isActiveItaLang() }}"><a href ng-click="setItalianLanguage()"><strong>IT</strong></a></li> -->
 								<!-- <li class="{{ isActiveEngLang() }}"><a href ng-click="setEnglishLanguage()"><strong>EN</strong></a></li> -->
@@ -247,110 +278,61 @@ var base64="<%=request.getAttribute("base64")%>";
 	<div class="container">
 <!-- 		<div class="row" style="margin-top:70px;"> -->
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
-				<div class="panel panel-default" style="margin-top:65px;">
-			  		<div class="panel-body">
+			<div class="col-md-8 col-md-offset-2 nopadding">
+				<div class="panel panel-default homepanel">
+			  		<div class="panel-body nopadding">
 			  			<div style="margin:5px 5px;">
-			  			
-				<!-- Main section with informations and practices -->
-	<!-- 		<div ng-class="{col-md-7:!frameOpened, col-md-9:frameOpened}"> -->
-	<!-- 				<div ng-class="{'col-md-8':!frameOpened, 'col-md-10':frameOpened}"> -->
-	<!-- 					<div class="col-md-10"> -->
-<!-- 							<div class="row" align="center" style="height: 85px">; margin-top: 20px; -->
-<!-- 								<div>"text-align: center" -->
-<!-- 									<table> -->
-<!-- 										<tr> -->
-<!-- 											<td width="35%" align="center" valign="middle"><img src="img/gamification_small.jpeg" alt="Logo gamification" title="Logo gamification" /></td> -->
-<!-- 											<td width="65%" align="center" valign="middle"><h1>{{ 'app_home-title' | i18n }}</h1></td> -->
-<!-- 										</tr> -->
-<!-- 									</table> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
-							
-<!-- 							<div class="row"> -->
-<!-- 								<div class="well">style="height: 250px" -->
-<!-- 									<table class="table">ng-init="retrieveUserData()" style="width: 98%" -->
-<!-- 										<tr> -->
-<!-- 											<th colspan="3" align="center"> -->
-<!-- 												<strong>{{ 'citizen_info' | i18n }}</strong> -->
-<!-- 											</th> -->
-<!-- 										</tr> -->
-<!-- 										<tr> -->
-<!-- 											<td width="10%" rowspan="4" align="center"> -->
-<!-- 												<a href="#" -->
-<!-- 													class="thumbnail"><img -->
-<!-- 													src="img/user.jpg" alt=""> -->
-<!-- 												</a> -->
-<!-- 											</td> -->
-<!-- 											<td width="45%">{{ 'citizen_name' | i18n }}: <strong>{{ getUserName() }}</strong></td><span id="user_name"></span> -->
-<!-- 											<td width="45%">{{ 'citizen_address' | i18n }}: <strong>{{ utenteCS.indirizzoRes }},{{ utenteCS.capRes }},{{ utenteCS.cittaRes }}-{{ utenteCS.provinciaRes }}</strong></td>{{ translateUserGender(user.gender) }} -->
-<!-- 										</tr> -->
-<!-- 										<tr> -->
-<!-- 											<td>{{ 'citizen_surname' | i18n }}: <strong>{{ getUserSurname() }}</strong></td><span id="user_surname"></span> -->
-<!-- 											<td>{{ 'citizen_mail' | i18n }}: <strong>{{ getMail() }}</strong></td> -->
-<!-- 										</tr> -->
-<!-- 										<tr> -->
-<!-- 											<td>{{ 'citizen_gender' | i18n }}: <strong>{{ utenteCS.sesso }}</strong></td> -->
-<!-- 											<td>{{ 'citizen_birth_municipality' | i18n }}: <strong>{{ utenteCS.luogoNascita }} ({{ utenteCS.provinciaNascita }})</strong></td> -->
-<!-- 										</tr> -->
-<!-- 										<tr> -->
-<!-- 											<td>{{ 'citizen_phone' | i18n }}: <strong>{{ utenteCS.cellulare }}</strong></td> -->
-<!-- 											<td>{{ 'citizen_date_of_birth' | i18n }}: <strong>{{ utenteCS.dataNascita }}</strong></td> -->
-<!-- 										</tr> -->
-<!-- 									</table> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
-								<ng-view class="row">{{ 'loading_text'| i18n }}...</ng-view>
-							</div>
+							<ng-view class="row">{{ 'loading_text'| i18n }}...</ng-view>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="my-big-footer" class="row">
-				<div class="col-md-8 col-md-offset-2" align="center">
+		</div>
+		<div id="my-big-footer" class="row">
+			<div class="col-md-8 col-md-offset-2" align="center">
 					
-					<h5><font face="Raleway-bold" size="5" color="gray"><strong>Green Game</strong></font> con ViaggiaRovereto</h5>
-					&egrave; un progetto di:
-					<br>
-					<footer>
-						<!-- <p>&copy; SmartCampus 2013</p> -->
-						<img src="img/footer/footer.png" width="90%" alt="" title="" />
-					</footer>
-				</div>
-			</div>
-			<div id="my-small-footer" class="row">
-				<div class="col-md-4 col-md-offset-2" align="center">
-					<h5><font face="Raleway-bold" size="5" color="gray"><strong>Green Game</strong></font></h5>
-				</div>
-				<div class="col-md-4" align="center">	
-					<h5> con ViaggiaRovereto</h5>
-				</div>
-				<div class="col-md-4" align="center">	
-					&egrave; un progetto di:
-				</div>	
-					<footer>
-						<br>
-						<div class="col-md-4" align="center">	
-							<img src="img/footer/streetLife.svg" width="120" alt="" title="" />
-						</div>
-						<br>
-						<div class="col-md-4" align="center">	
-							<img src="img/footer/fbk.svg" width="85" alt="" title="" />
-						</div>
-						<br>
-						<div class="col-md-4" align="center">	
-							<img src="img/footer/comuneRV.svg" width="150" alt="" title="" />
-						</div>
-						<br>
-						<div class="col-md-4" align="center">	
-							<img src="img/footer/caire.svg" width="150" alt="" title="" />
-						</div>
-						<br>
-						<!-- <p>&copy; SmartCampus 2013</p> -->
-					</footer>
+				<h5><font face="Raleway-bold" size="5" color="gray"><strong>Green Game</strong></font> con ViaggiaRovereto</h5>
+				&egrave; un progetto di:
+				<br>
+				<footer>
+					<!-- <p>&copy; SmartCampus 2013</p> -->
+					<img src="img/footer/footer.png" width="90%" alt="" title="" />
+				</footer>
 			</div>
 		</div>
-	</div>	
+		<div id="my-small-footer" class="row">
+			<div class="col-md-4 col-md-offset-2" align="center">
+				<h5><font face="Raleway-bold" size="5" color="gray"><strong>Green Game</strong></font></h5>
+			</div>
+			<div class="col-md-4" align="center">	
+				<h5> con ViaggiaRovereto</h5>
+			</div>
+			<div class="col-md-4" align="center">	
+				&egrave; un progetto di:
+			</div>	
+			<footer>
+				<br>
+				<div class="col-md-4" align="center">	
+					<img src="img/footer/streetLife.svg" width="120" alt="" title="" />
+				</div>
+				<br>
+				<div class="col-md-4" align="center">	
+					<img src="img/footer/fbk.svg" width="85" alt="" title="" />
+				</div>
+				<br>
+				<div class="col-md-4" align="center">	
+					<img src="img/footer/comuneRV.svg" width="150" alt="" title="" />
+				</div>
+				<br>
+				<div class="col-md-4" align="center">	
+					<img src="img/footer/caire.svg" width="150" alt="" title="" />
+				</div>
+				<br>
+				<!-- <p>&copy; SmartCampus 2013</p> -->
+			</footer>
+		</div>
+	</div>
+</div>	
 </body>
 <script type="text/ng-template" id="/dialogs/nickinput.html">
 <div class="modal" id="variablesModal" role="dialog"> <!-- aria-labelledby="modalTitle" aria-hidden="true" -->
@@ -362,7 +344,19 @@ var base64="<%=request.getAttribute("base64")%>";
 				</div>
 				<div class="modal-body">
 					<div>
-					{{ 'modal_desc_label' | i18n }}
+					{{ 'modal_desc_label' | i18n }}<br />
+					Per maggiori informazioni visualizza anche i seguenti link:
+					<ul>
+						<li>
+							<a href="view_rules" target="_blank" >{{ 'left_menu-rules' | i18n }}</a>
+						</li>
+						<li>
+							<a href="view_privacy" target="_blank" >{{ 'left_menu-privacy' | i18n }}</a>
+						</li>
+						<li>
+							<a href="view_prizes" target="_blank" >{{ 'left_menu-prizes' | i18n }}</a>
+						</li>
+					</ul>
 					</div>
 					<div class="form-group required" ng-class="{true: 'has-error'}[form.nickname.$dirty && form.nickname.$invalid]">
 						<label class="control-label" for="username">{{ 'modal_nick_label' | i18n }}:</label>
@@ -426,6 +420,7 @@ var base64="<%=request.getAttribute("base64")%>";
 					<div class="form-group" ng-class="{true: 'has-error'}[form.invitation_person.$dirty && form.invitation_person.$invalid]">
 						<label class="control-label" for="invitation">{{ 'modal_invitation_nickname_label' | i18n }}</label>
 						<input type="text" class="form-control" name="invitation_person" id="invitation" placeholder="{{ 'modal_invitation_nickname_placeholder' | i18n }}" ng-model="user.invitation">
+						<div ng-show="showInvitationMessages" class="alert alert-danger" role="alert">{{ errorInvitationMessages }}</div>
 					</div>
 				</div>
 				<div class="required_desc"><p>{{ 'modal_required_field_label' | i18n }}</p></div>
@@ -439,4 +434,5 @@ var base64="<%=request.getAttribute("base64")%>";
 </div>
 </script>
 
+>>>>>>> master
 </html>

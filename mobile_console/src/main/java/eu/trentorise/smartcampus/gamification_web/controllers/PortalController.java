@@ -38,6 +38,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,6 +93,10 @@ public class PortalController extends SCController{
 	@Autowired
 	@Value("${smartcampus.isTest}")
 	private String isTest;
+	
+	@Autowired
+	@Value("${smartcampus.gamification.pointtype}")
+	private String p_types;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -148,6 +154,72 @@ public class PortalController extends SCController{
     @Autowired
     @Value("${smartcampus.gamification.gamename}")
     private String gameid;
+    @Autowired
+    @Value("${gamification.server.bauth.username}")
+    private String basicAuthUsername;
+    @Autowired
+    @Value("${gamification.server.bauth.password}")
+    private String basicAuthPassword;
+    @Autowired
+    @Value("${gamification.challenges.description.bikekm}")
+    private String challengeDescriptionBikeKm;
+    @Autowired
+    @Value("${gamification.challenges.description.bikesharekm}")
+    private String challengeDescriptionBikeShareKm;
+    @Autowired
+    @Value("${gamification.challenges.description.walkkm}")
+    private String challengeDescriptionWalkKm;
+    @Autowired
+    @Value("${gamification.challenges.description.biketrips}")
+    private String challengeDescriptionBikeShareTrip;
+    @Autowired
+    @Value("${gamification.challenges.description.bustrips}")
+    private String challengeDescriptionBusTrip;
+    @Autowired
+    @Value("${gamification.challenges.description.traintrips}")
+    private String challengeDescriptionTrainTrip;
+    @Autowired
+    @Value("${gamification.challenges.description.zeroimpacttrips}")
+    private String challengeDescriptionZeroImpactTrip;
+    @Autowired
+    @Value("${gamification.challenges.description.promotedtrips}")
+    private String challengeDescriptionPromotedTrip;
+    @Autowired
+    @Value("${gamification.challenges.description.trybibsbutr}")
+    private String challengeDescriptionTryBikeBikeShareBusTrain;
+    @Autowired
+    @Value("${gamification.challenges.description.recommendation}")
+    private String challengeDescriptionRecommendation;
+    @Autowired
+    @Value("${gamification.challenges.description.gbshzipoint}")
+    private String challengeDescriptionGreenBikeShareHealthZeroImpactPoint;
+    @Autowired
+    @Value("${gamification.challenges.description.topxweek}")
+    private String challengeDescriptionTopXWeek;
+    @Autowired
+    @Value("${gamification.challenges.description.prpioneer}")
+    private String challengeDescriptionParkRidePioneer;
+    @Autowired
+    @Value("${gamification.challenges.description.bspioneer}")
+    private String challengeDescriptionBikeSharingPioneer;
+    @Autowired
+    @Value("${gamification.challenges.description.nextbadge.green}")
+    private String challengeDescriptionNextBadgeGreen;
+    @Autowired
+    @Value("${gamification.challenges.description.nextbadge.zeroimpact}")
+    private String challengeDescriptionNextBadgeZeroImpact;
+    @Autowired
+    @Value("${gamification.challenges.description.nextbadge.publictransport}")
+    private String challengeDescriptionNextBadgePublicTransport;
+    @Autowired
+    @Value("${gamification.challenges.description.nextbadge.bike}")
+    private String challengeDescriptionNextBadgeBike;
+    @Autowired
+    @Value("${gamification.challenges.description.nextbadge.recommendation}")
+    private String challengeDescriptionNextBadgeRecommendation;
+    @Autowired
+    @Value("${gamification.challenges.description.complete.badge.collection}")
+    private String challengeDescriptionCompleteBadgeCollection;
     
     private final String JSON_STATE = "state";
     private final String JSON_POINTCONCEPT = "PointConcept";
@@ -172,6 +244,29 @@ public class PortalController extends SCController{
 			model.put("user_name", user.getName());
 			model.put("user_surname", user.getSurname());
 			model.put("gameid", gameid);
+			model.put("bauth_user", basicAuthUsername);
+			model.put("bauth_password", basicAuthPassword);
+			model.put("point_types", p_types);	// point type
+			model.put("chall_desc_bike_km", challengeDescriptionBikeKm);
+			model.put("chall_desc_bike_share_km", challengeDescriptionBikeShareKm);
+			model.put("chall_desc_walk_km", challengeDescriptionWalkKm);
+			model.put("chall_desc_bike_share_trip", challengeDescriptionBikeShareTrip);
+			model.put("chall_desc_bus_trip", challengeDescriptionBusTrip);
+			model.put("chall_desc_train_trip", challengeDescriptionTrainTrip);
+			model.put("chall_desc_zero_impact_trip", challengeDescriptionZeroImpactTrip);
+			model.put("chall_desc_promoted_trip", challengeDescriptionPromotedTrip);
+			model.put("chall_desc_try_bike_bikeshare_bus_train", challengeDescriptionTryBikeBikeShareBusTrain);
+			model.put("chall_desc_top_x_week", challengeDescriptionTopXWeek);
+			model.put("chall_desc_park_ride_pioneer", challengeDescriptionParkRidePioneer);
+			model.put("chall_desc_bike_sharing_pioneer", challengeDescriptionBikeSharingPioneer);
+			model.put("chall_desc_recommendation", challengeDescriptionRecommendation);
+			model.put("chall_desc_green_bike_sharing_health_zero_impact_point", challengeDescriptionGreenBikeShareHealthZeroImpactPoint);
+			model.put("chall_desc_next_badge_green", challengeDescriptionNextBadgeGreen);
+			model.put("chall_desc_next_badge_zero_impact", challengeDescriptionNextBadgeZeroImpact);
+			model.put("chall_desc_next_badge_public_transport", challengeDescriptionNextBadgePublicTransport);
+			model.put("chall_desc_next_badge_bike", challengeDescriptionNextBadgeBike);
+			model.put("chall_desc_next_badge_recommendation", challengeDescriptionNextBadgeRecommendation);
+			model.put("chall_desc_complete_badge_collection", challengeDescriptionCompleteBadgeCollection);
 			logger.info(String
 					.format("I am in get root. User id: " + user.getUserId()));
 			AccountProfile account = profileService.getAccountProfile(getToken(request));
@@ -342,6 +437,41 @@ public class PortalController extends SCController{
 		model.setViewName("cookie_licence");
 		return model;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/view_prizes")
+	public ModelAndView preSecurePrizesPage(HttpServletRequest request) {
+		//String redirectUri = mainURL + "/check";
+		logger.error(String.format("I am in prizes info page"));
+		ModelAndView model = new ModelAndView();
+		model.setViewName("g_prizes");
+		return model;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/view_rules")
+	public ModelAndView preSecureRulesPage(HttpServletRequest request) {
+		//String redirectUri = mainURL + "/check";
+		logger.error(String.format("I am in rules info page"));
+		ModelAndView model = new ModelAndView();
+		model.setViewName("g_rules");
+		return model;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/view_privacy")
+	public ModelAndView preSecurePrivacyPage(HttpServletRequest request) {
+		//String redirectUri = mainURL + "/check";
+		logger.error(String.format("I am in privacy info page"));
+		ModelAndView model = new ModelAndView();
+		model.setViewName("g_privacy");
+		return model;
+	}
+	
+/*	@RequestMapping(method = RequestMethod.GET, value = "/viewall")
+	public ModelAndView viewAllElements(HttpServletRequest request) {
+		logger.error(String.format("I am in get viewAll"));
+		ModelAndView model = new ModelAndView();
+		model.setViewName("info_index");
+		return model;
+	}*/
 	
 //	@RequestMapping(method = RequestMethod.GET, value = "/logout")
 //	public ModelAndView outSecure(HttpServletRequest request) {
