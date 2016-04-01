@@ -85,7 +85,7 @@ usage: challengeUploader
 #### Example
 
 ```
-java -jar challengeUploader.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input C:\Lavoro\workspace\soa\smartcampus.gamification\game -engine.challenge-gen\output.json
+java -jar challengeUploader.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input generated.json
 ```
 
 
