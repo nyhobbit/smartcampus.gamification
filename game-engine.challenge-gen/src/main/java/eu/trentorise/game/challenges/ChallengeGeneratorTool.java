@@ -122,7 +122,15 @@ public class ChallengeGeneratorTool {
 	GamificationEngineRestFacade facade = new GamificationEngineRestFacade(
 		host + "gengine/");
 	System.out.println("Contacting gamification engine on host " + host);
-	List<Content> users = facade.readGameState(gameId);
+	List<Content> users = null;
+
+	try {
+	    users = facade.readGameState(gameId);
+	} catch (Exception e) {
+	    System.err.println("Error in reading game state from host " + host
+		    + " for gameId " + gameId);
+	    return;
+	}
 	System.out
 		.println("Reading game from gamification engine game state for gameId: "
 			+ gameId);
