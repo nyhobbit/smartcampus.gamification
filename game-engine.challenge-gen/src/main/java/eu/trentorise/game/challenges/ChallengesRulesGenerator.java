@@ -83,7 +83,6 @@ public class ChallengesRulesGenerator {
 
 		} else if (line.startsWith("package") && remove) {
 		    // do nothing
-		    System.out.println();
 		} else {
 		    buffer.append(line).append(
 			    System.getProperty("line.separator"));
