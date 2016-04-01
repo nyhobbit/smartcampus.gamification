@@ -39,7 +39,9 @@ Different zips (with related dependencies) are created inside target
 
 Launch using:
 
+```
 java -jar challengeGenerator.jar
+```
 
 ### Command line arguments
 
@@ -65,7 +67,9 @@ java -jar challengeGenerator-jar-with-dependencies.jar -host http://localhost:80
 
 Launch using:
 
+```
 java -jar challengeUploader.jar
+```
 
 ### Command line arguments:
 
