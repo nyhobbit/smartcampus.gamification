@@ -18,6 +18,23 @@ Generated rules in json file can be inserted into
 1. Clone repository with git
 2. Compile with maven using mvn install
 
+## How to generate tools
+
+Challenge generator have two tools available:
+
+1. Challenge Generator, created using
+```
+mvn clean install -Pgenerator
+```
+
+2. Rule uploader, created using
+```
+mvn clean install -Puploader
+```
+
+Different zips (with related dependencies) are created inside target
+
+
 ## How to run
 
 Launch generated jar using:
