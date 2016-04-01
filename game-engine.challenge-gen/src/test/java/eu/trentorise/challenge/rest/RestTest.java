@@ -1,10 +1,11 @@
 package eu.trentorise.challenge.rest;
 
-import static eu.trentorise.challenge.TestConstants.CONTEXT;
-import static eu.trentorise.challenge.TestConstants.GAMEID;
-import static eu.trentorise.challenge.TestConstants.HOST;
-import static eu.trentorise.challenge.TestConstants.INSERT_CONTEXT;
-import static eu.trentorise.challenge.TestConstants.SAVE_ITINERARY;
+import static eu.trentorise.challenge.PropertiesUtil.CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.GAMEID;
+import static eu.trentorise.challenge.PropertiesUtil.HOST;
+import static eu.trentorise.challenge.PropertiesUtil.INSERT_CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.SAVE_ITINERARY;
+import static eu.trentorise.challenge.PropertiesUtil.get;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -30,13 +31,14 @@ public class RestTest {
 
     @Before
     public void setup() {
-	facade = new GamificationEngineRestFacade(HOST + CONTEXT);
-	insertFacade = new GamificationEngineRestFacade(HOST + INSERT_CONTEXT);
+	facade = new GamificationEngineRestFacade(get(HOST) + get(CONTEXT));
+	insertFacade = new GamificationEngineRestFacade(get(HOST)
+		+ get(INSERT_CONTEXT));
     }
 
     @Test
     public void gameReadGameStateTest() {
-	List<Content> result = facade.readGameState(GAMEID);
+	List<Content> result = facade.readGameState(get(GAMEID));
 	assertTrue(!result.isEmpty());
     }
 
@@ -47,21 +49,21 @@ public class RestTest {
 	rule.setContent("rule \"ss\" when then System.out.println(\"LOGGO\"");
 	rule.setName("sampleRule");
 	// insert rule
-	RuleDto result = insertFacade.insertGameRule(GAMEID, rule);
+	RuleDto result = insertFacade.insertGameRule(get(GAMEID), rule);
 	assertTrue(!result.getId().isEmpty());
 	// delete inserted rule
-	boolean res = insertFacade.deleteGameRule(GAMEID, result.getId());
+	boolean res = insertFacade.deleteGameRule(get(GAMEID), result.getId());
 	assertTrue(res);
     }
 
     @Test
     public void saveItineraryTest() {
 	GamificationEngineRestFacade facade = new GamificationEngineRestFacade(
-		HOST + CONTEXT);
+		get(HOST) + get(CONTEXT));
 	ExecutionDataDTO input = new ExecutionDataDTO();
-	input.setActionId(SAVE_ITINERARY);
+	input.setActionId(get(SAVE_ITINERARY));
 	input.setPlayerId("1");
-	input.setGameId(GAMEID);
+	input.setGameId(get(GAMEID));
 	Map<String, Object> data = new HashMap<String, Object>();
 	data.put("bikeDistance", Double.valueOf(1.0d));
 	input.setData(data);
@@ -82,9 +84,9 @@ public class RestTest {
 	for (String line : lines) {
 	    JourneyData jd = ConverterUtil.extractJourneyData(line);
 	    ExecutionDataDTO input = new ExecutionDataDTO();
-	    input.setActionId(SAVE_ITINERARY);
+	    input.setActionId(get(SAVE_ITINERARY));
 	    input.setPlayerId(jd.getUserId());
-	    input.setGameId(GAMEID);
+	    input.setGameId(get(GAMEID));
 	    input.setData(jd.getData());
 	    boolean result = facade.saveItinerary(input);
 
