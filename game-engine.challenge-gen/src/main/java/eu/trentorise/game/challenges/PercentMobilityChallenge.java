@@ -8,8 +8,6 @@ import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
 import eu.trentorise.game.challenges.model.Challenge;
 import eu.trentorise.game.challenges.model.ChallengeType;
 
-// import eu.trentorise.game.model.Player;
-
 public class PercentMobilityChallenge extends Challenge {
     private String mode = null;
     private Double percent = 0.0;
@@ -17,9 +15,9 @@ public class PercentMobilityChallenge extends Challenge {
     private Integer prize = null;
     private String pointType = null;
 
-    public PercentMobilityChallenge() {
+    public PercentMobilityChallenge(String templateDir) {
+	super(templateDir, "MobilityPercentImproveTemplate.drt");
 	generateChId();
-	templateName = "MobilityPercentImproveTemplate.drt";
 	type = ChallengeType.PERCENT;
     }
 
@@ -77,11 +75,10 @@ public class PercentMobilityChallenge extends Challenge {
 
 	templateParams.put("ch_player", playerId);
 	try {
-	    generatedRules += generateRules(locateTemplate());
+	    generatedRules += generateRules();
 	} catch (IOException ioe) {
 	    throw new UndefinedChallengeException(
-		    "challenge cannot be compiled for user " + playerId);
+		    "challenge cannot be compiled for user " + playerId, ioe);
 	}
-	return;
     }
 }

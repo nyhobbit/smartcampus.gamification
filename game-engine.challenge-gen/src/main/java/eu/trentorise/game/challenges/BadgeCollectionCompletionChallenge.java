@@ -15,9 +15,9 @@ public class BadgeCollectionCompletionChallenge extends Challenge {
     private String pointType = null;
     private Integer prize = null;
 
-    public BadgeCollectionCompletionChallenge() {
+    public BadgeCollectionCompletionChallenge(String templateDir) {
+	super(templateDir, "BadgeCollectionCompletionTemplate.drt");
 	generateChId();
-	templateName = "BadgeCollectionCompletionTemplate.drt";
 	type = ChallengeType.BADGECOLLECTION;
     }
 
@@ -67,7 +67,7 @@ public class BadgeCollectionCompletionChallenge extends Challenge {
 
 	templateParams.put("ch_player", playerId);
 	try {
-	    generatedRules += generateRules(locateTemplate());
+	    generatedRules += generateRules();
 	} catch (IOException ioe) {
 	    throw new UndefinedChallengeException(
 		    "challenge cannot be compiled for user " + playerId);

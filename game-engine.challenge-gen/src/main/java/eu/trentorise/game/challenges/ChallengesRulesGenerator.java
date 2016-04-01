@@ -37,7 +37,8 @@ public class ChallengesRulesGenerator {
      * @throws UndefinedChallengeException
      */
     public String generateRules(ChallengeRuleRow challengeSpec,
-	    List<Content> users) throws UndefinedChallengeException {
+	    List<Content> users, String templateDir)
+	    throws UndefinedChallengeException {
 	Map<String, Object> params = new HashMap<String, Object>();
 	buffer = new StringBuffer();
 	buffer.append("/** " + challengeSpec.getType() + " "
@@ -45,8 +46,10 @@ public class ChallengesRulesGenerator {
 
 	// get right challenge
 	for (Content user : users) {
-	    Challenge c = factory.createChallenge(ChallengeType
-		    .valueOf(challengeSpec.getType()));
+	    Challenge c = factory
+		    .createChallenge(
+			    ChallengeType.valueOf(challengeSpec.getType()),
+			    templateDir);
 	    params = new HashMap<String, Object>();
 	    // TODO: con peppo, dobbiamo capire come le varie tipologie vanno ad
 	    // essere usate nei template
@@ -94,4 +97,5 @@ public class ChallengesRulesGenerator {
 	// lines now contains all the strings between line breaks
 	return buffer.toString();
     }
+
 }

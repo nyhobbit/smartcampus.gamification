@@ -25,9 +25,10 @@ public class FactoryTest {
 	// PERCENT Challenge building
 	HashMap<String, Object> params = new HashMap<String, Object>();
 	try {
-	    c = chFactory.createChallenge(ChallengeType.PERCENT);
+	    c = chFactory.createChallenge(ChallengeType.PERCENT,
+		    "rules/templates");
 	    params = new HashMap<String, Object>();
-	    params.put("percent", new Double(15));
+	    params.put("target", new Double(15));
 	    params.put("mode", "walkDistance");
 	    params.put("bonus", new Integer(50));
 	    params.put("point_type", "green leaves");
@@ -47,11 +48,13 @@ public class FactoryTest {
 	// TRIPNUMBER Challenge building
 	try {
 	    // TODO: cambiare nome per allinearlo a drt? é TravelMode
-	    c = chFactory.createChallenge(ChallengeType.TRIPNUMBER);
+	    c = chFactory.createChallenge(ChallengeType.TRIPNUMBER,
+		    "rules/templates");
 	    params = new HashMap<String, Object>();
 	    params.put("trips", new Integer(1));
 	    params.put("mode", "bikesharing");
 	    params.put("bonus", new Integer(50));
+	    params.put("target", new Double(20));
 	    params.put("point_type", "green leaves");
 	    c.setTemplateParams(params);
 	    c.compileChallenge(testUserId);
@@ -68,7 +71,8 @@ public class FactoryTest {
 
 	// BADGE COLLECTION COMPLETION Challenge building
 	try {
-	    c = chFactory.createChallenge(ChallengeType.BADGECOLLECTION);
+	    c = chFactory.createChallenge(ChallengeType.BADGECOLLECTION,
+		    "rules/templates");
 	    params = new HashMap<String, Object>();
 	    params.put("badge", "badge_foo");
 	    params.put("badge_collection", "green leaves");
@@ -89,7 +93,8 @@ public class FactoryTest {
 
 	// GAME RECOMMENDATION Challenge building
 	try {
-	    c = chFactory.createChallenge(ChallengeType.RECOMMENDATION);
+	    c = chFactory.createChallenge(ChallengeType.RECOMMENDATION,
+		    "rules/templates");
 	    params = new HashMap<String, Object>();
 	    params.put("recommendations", new Integer(10));
 	    params.put("point_type", "green leaves");

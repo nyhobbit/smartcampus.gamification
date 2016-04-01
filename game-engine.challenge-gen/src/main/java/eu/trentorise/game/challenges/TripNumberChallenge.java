@@ -16,9 +16,9 @@ public class TripNumberChallenge extends Challenge {
     private Integer prize = null;
     private String pointType = null;
 
-    public TripNumberChallenge() {
+    public TripNumberChallenge(String templateDir) {
+	super(templateDir, "TravelModeTemplate.drt");
 	generateChId();
-	templateName = "TravelModeTemplate.drt";
 	type = ChallengeType.TRIPNUMBER;
 
     }
@@ -72,7 +72,7 @@ public class TripNumberChallenge extends Challenge {
 
 	templateParams.put("ch_player", playerId);
 	try {
-	    generatedRules += generateRules(locateTemplate());
+	    generatedRules += generateRules();
 	} catch (IOException ioe) {
 	    throw new UndefinedChallengeException(
 		    "challenge cannot be compiled for user " + playerId);

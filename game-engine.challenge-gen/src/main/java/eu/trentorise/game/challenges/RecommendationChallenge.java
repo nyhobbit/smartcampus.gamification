@@ -13,9 +13,9 @@ public class RecommendationChallenge extends Challenge {
     private String pointType = null;
     private int recommendations = 0;
 
-    public RecommendationChallenge() {
+    public RecommendationChallenge(String templateDir) {
+	super(templateDir, "GameRecommendationTemplate.drt");
 	generateChId();
-	templateName = "GameRecommendationTemplate.drt";
 	type = ChallengeType.RECOMMENDATION;
     }
 
@@ -63,7 +63,7 @@ public class RecommendationChallenge extends Challenge {
 	// here find the players affected by this one challenge
 	templateParams.put("ch_player", playerId);
 	try {
-	    generatedRules += generateRules(locateTemplate());
+	    generatedRules += generateRules();
 	} catch (IOException ioe) {
 	    throw new UndefinedChallengeException(
 		    "challenge cannot be compiled for user " + playerId);

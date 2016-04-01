@@ -1,6 +1,9 @@
 package eu.trentorise.game.challenges.model;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -28,6 +31,18 @@ public abstract class Challenge {
     protected HashMap<String, Object> customData = null;
     protected String generatedRules = "";
 
+    private String templateDir;
+
+    /**
+     * Create a new challenge using given template
+     * 
+     * @param templateName
+     */
+    public Challenge(String templateDir, String templateName) {
+	this.templateDir = templateDir;
+	this.templateName = templateName;
+    }
+
     public abstract void compileChallenge(String playerId)
 	    throws UndefinedChallengeException;
 
@@ -53,11 +68,18 @@ public abstract class Challenge {
 	this.chId = UUID.randomUUID();
     }
 
-    protected String generateRules(String template) throws IOException {
+    protected String generateRules() throws IOException {
 	ObjectDataCompiler compiler = new ObjectDataCompiler();
-	return compiler.compile(Arrays.asList(templateParams),
-		Thread.currentThread().getContextClassLoader()
-			.getResourceAsStream(template));
+	InputStream templateStream = Thread
+		.currentThread()
+		.getContextClassLoader()
+		.getResourceAsStream(
+			templateDir + File.separator + templateName);
+	if (templateStream == null) {
+	    templateStream = new FileInputStream(templateDir + File.separator
+		    + templateName);
+	}
+	return compiler.compile(Arrays.asList(templateParams), templateStream);
     }
 
     public UUID getChId() {
@@ -76,14 +98,4 @@ public abstract class Challenge {
 	return templateParams;
     }
 
-    /*
-     * from the template file name in templateName compute the path of the
-     * actual .drt template file to be used TODO: implement a general way to
-     * discover template resource
-     */
-    protected String locateTemplate() {
-	String ret = "rules/templates/" + templateName;
-	System.out.println(ret);
-	return ret;
-    }
 }

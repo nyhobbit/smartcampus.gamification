@@ -83,7 +83,8 @@ public class GenerationTest {
 	    Matcher matcher = new Matcher(challengeSpec);
 	    List<Content> filteredUsers = matcher.match(users);
 	    logger.debug("found users: " + filteredUsers.size());
-	    String res = crg.generateRules(challengeSpec, filteredUsers);
+	    String res = crg.generateRules(challengeSpec, filteredUsers,
+		    "rules/challenge");
 	    logger.debug("generated rules \n" + res + "\n");
 
 	    assertTrue(!res.isEmpty());
@@ -114,7 +115,8 @@ public class GenerationTest {
 	    Matcher matcher = new Matcher(challengeSpec);
 	    List<Content> filteredUsers = matcher.match(users);
 	    logger.debug("found users: " + filteredUsers.size());
-	    String res = crg.generateRules(challengeSpec, filteredUsers);
+	    String res = crg.generateRules(challengeSpec, filteredUsers,
+		    "rules/challenge");
 	    logger.debug("generated rules \n" + res + "\n");
 
 	    assertTrue(!res.isEmpty());

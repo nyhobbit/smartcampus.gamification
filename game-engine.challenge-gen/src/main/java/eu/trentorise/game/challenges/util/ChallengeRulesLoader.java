@@ -1,6 +1,7 @@
 package eu.trentorise.game.challenges.util;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -32,11 +33,24 @@ public final class ChallengeRulesLoader {
 	    throw new IllegalArgumentException(
 		    "challenges rules file must be a csv file");
 	}
+	BufferedReader rdr = null;
 	try {
-	    // open csv file
-	    BufferedReader rdr = new BufferedReader(new StringReader(
-		    IOUtils.toString(Thread.currentThread()
-			    .getContextClassLoader().getResourceAsStream(ref))));
+
+	    try {
+		// open csv file
+		rdr = new BufferedReader(new StringReader(
+			IOUtils.toString(Thread.currentThread()
+				.getContextClassLoader()
+				.getResourceAsStream(ref))));
+	    } catch (IOException e) {
+		logger.error(e.getMessage(), e);
+		return null;
+	    } catch (NumberFormatException e) {
+		logger.error(e.getMessage(), e);
+		return null;
+	    } catch (NullPointerException npe) {
+		rdr = new BufferedReader(new FileReader(ref));
+	    }
 	    ChallengeRules response = new ChallengeRules();
 	    boolean first = true;
 	    for (String line = rdr.readLine(); line != null; line = rdr
@@ -57,15 +71,12 @@ public final class ChallengeRulesLoader {
 		crr.setSelectionCriteria(elements[8]);
 		response.getChallenges().add(crr);
 	    }
-
 	    logger.debug("Rows in file " + response.getChallenges().size());
 	    return response;
-	} catch (IOException e) {
-	    logger.error(e.getMessage(), e);
-	    return null;
-	} catch (NumberFormatException e) {
-	    logger.error(e.getMessage(), e);
-	    return null;
+	} finally {
+	    if (rdr != null) {
+		rdr.close();
+	    }
 	}
     }
 }
