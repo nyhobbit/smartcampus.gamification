@@ -78,6 +78,7 @@ public class RestTest {
 	String ref = "savedtrips1.json";
 
 	// read all lines from file
+	@SuppressWarnings("unchecked")
 	List<String> lines = IOUtils.readLines(Thread.currentThread()
 		.getContextClassLoader().getResourceAsStream(ref));
 

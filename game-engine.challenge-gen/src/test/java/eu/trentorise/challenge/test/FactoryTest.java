@@ -47,7 +47,7 @@ public class FactoryTest {
 
 	// TRIPNUMBER Challenge building
 	try {
-	    // TODO: cambiare nome per allinearlo a drt? é TravelMode
+	    // TODO: cambiare nome per allinearlo a drt? e' TravelMode
 	    c = chFactory.createChallenge(ChallengeType.TRIPNUMBER,
 		    "rules/templates");
 	    params = new HashMap<String, Object>();

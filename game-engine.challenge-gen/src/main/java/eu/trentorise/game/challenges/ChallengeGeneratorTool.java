@@ -9,6 +9,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -42,7 +43,13 @@ public class ChallengeGeneratorTool {
 	// parse options
 	init();
 	CommandLineParser parser = new DefaultParser();
-	CommandLine cmd = parser.parse(options, args);
+	CommandLine cmd = null;
+	try {
+	    cmd = parser.parse(options, args);
+	} catch (MissingOptionException e) {
+	    printHelp();
+	    return;
+	}
 	if (cmd.getOptions() == null || cmd.getOptions().length == 0) {
 	    printHelp();
 	    return;
@@ -111,13 +118,6 @@ public class ChallengeGeneratorTool {
 	    System.out.println("Error in loading : " + input);
 	    return;
 	}
-	FileOutputStream fout;
-	try {
-	    fout = new FileOutputStream(output);
-	} catch (FileNotFoundException e1) {
-	    System.err.println("Errore in writing output file " + output);
-	    return;
-	}
 	// get users from gamification engine
 	GamificationEngineRestFacade facade = new GamificationEngineRestFacade(
 		host + "gengine/");
@@ -129,6 +129,13 @@ public class ChallengeGeneratorTool {
 
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
 		new ChallengeFactory());
+	FileOutputStream fout;
+	try {
+	    fout = new FileOutputStream(output);
+	} catch (FileNotFoundException e1) {
+	    System.err.println("Errore in writing output file " + output);
+	    return;
+	}
 
 	// generate challenges
 	int tot = 0;
