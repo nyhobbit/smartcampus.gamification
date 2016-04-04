@@ -1,7 +1,9 @@
 package eu.trentorise.game.challenges.rest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -12,6 +14,10 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import eu.trentorise.game.challenges.api.Constants;
 
@@ -32,24 +38,57 @@ public class GamificationEngineRestFacade {
     private static final String RULE = "rule";
     private static final String DB = "db";
     private static final String EXECUTE = "execute";
+    private static final String PLAYER = "player";
 
-    private final String endpoint;
+    private WebTarget target;
 
+    /**
+     * Create gamification engine rest facade on selected endpoint
+     * 
+     * @param endpoint
+     */
     public GamificationEngineRestFacade(final String endpoint) {
 	if (endpoint == null) {
 	    throw new NullPointerException("Endpoint cannot be null");
 	}
+	logger.debug("GamificationEngineRestFacade created with no authentication");
+	target = ClientBuilder.newClient().target(endpoint);
+    }
+
+    /**
+     * Create gamification engine rest facade on selected endpoint and select
+     * http basic authentication credentials
+     * 
+     * @param endpoint
+     * @param username
+     * @param password
+     * @throws NullPointerException
+     *             if parameters are null
+     */
+    public GamificationEngineRestFacade(final String endpoint,
+	    final String username, final String password)
+	    throws NullPointerException {
+	if (endpoint == null || username == null || password == null) {
+	    throw new NullPointerException(
+		    "Endpoint, username and password cannot be null");
+	}
 	logger.debug("GamificationEngineRestFacade created");
-	this.endpoint = endpoint;
+	// build endpoint
+	// with htt p basic authentication
+	HttpAuthenticationFeature feature = HttpAuthenticationFeature
+		.basicBuilder().nonPreemptive().credentials(username, password)
+		.build();
+	Client client = ClientBuilder.newClient();
+	client.register(feature);
+	target = client.target(endpoint);
+	logger.debug("created endpoint for " + endpoint);
     }
 
     /**
      * @return {@link WebTarget} to be used by facade
      */
-    private WebTarget createEndpoint() {
-	logger.debug("created endpoint for " + endpoint);
-	Client client = ClientBuilder.newClient();
-	return client.target(endpoint);
+    private WebTarget getTarget() {
+	return target;
     }
 
     /**
@@ -62,7 +101,7 @@ public class GamificationEngineRestFacade {
 	if (gameId == null) {
 	    throw new IllegalArgumentException("gameId cannot be null");
 	}
-	WebTarget target = createEndpoint().path(STATE).path(gameId);
+	WebTarget target = getTarget().path(STATE).path(gameId);
 	// for testing pagination: target.queryParam("page",
 	// 1).queryParam("size", 1).request().get(Paginator.class);
 	Paginator response = target.request().get(Paginator.class);
@@ -108,7 +147,7 @@ public class GamificationEngineRestFacade {
 	if (gameId == null || rule == null) {
 	    throw new IllegalArgumentException("input cannot be null");
 	}
-	WebTarget target = createEndpoint().path(GAME).path(gameId).path(RULE)
+	WebTarget target = getTarget().path(GAME).path(gameId).path(RULE)
 		.path(DB);
 	Response response = target.request().post(Entity.json(rule));
 
@@ -116,7 +155,8 @@ public class GamificationEngineRestFacade {
 	    logger.debug("response code: " + response.getStatus());
 	    return response.readEntity(RuleDto.class);
 	}
-	logger.error("response code: " + response.getStatus());
+	logger.error("response code: " + response.getStatus() + ", reason: "
+		+ response.getStatusInfo());
 	return null;
     }
 
@@ -134,7 +174,7 @@ public class GamificationEngineRestFacade {
 	    throw new IllegalArgumentException("input cannot be null");
 	}
 	String ruleUrl = StringUtils.removeStart(ruleId, Constants.RULE_PREFIX);
-	WebTarget target = createEndpoint().path(GAME).path(gameId).path(RULE)
+	WebTarget target = getTarget().path(GAME).path(gameId).path(RULE)
 		.path(DB).path(ruleUrl);
 	Response response = target.request().delete();
 	if (response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -149,7 +189,7 @@ public class GamificationEngineRestFacade {
 	if (input == null) {
 	    throw new IllegalArgumentException("input cannot be null");
 	}
-	WebTarget target = createEndpoint().path(EXECUTE);
+	WebTarget target = getTarget().path(EXECUTE);
 	Response response = target.request().post(Entity.json(input));
 	if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 	    logger.debug("response code: " + response.getStatus());
@@ -157,5 +197,33 @@ public class GamificationEngineRestFacade {
 	}
 	logger.error("response code: " + response.getStatus());
 	return false;
+    }
+
+    public boolean updateChallengeCustomData(String gameId, String playerId,
+	    Map<String, Object> customData) {
+	if (gameId == null || playerId == null || customData == null) {
+	    throw new IllegalArgumentException("input cannot be null");
+	}
+	Map<String, Object> values = new HashMap<String, Object>();
+	values.put("gameId", gameId);
+	values.put("playerId", playerId);
+	values.putAll(customData);
+	ObjectMapper mapper = new ObjectMapper();
+	try {
+	    System.out.println(mapper.writeValueAsString(values));
+	} catch (JsonProcessingException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	WebTarget target = getTarget().path(GAME).path(gameId).path(PLAYER)
+		.path(playerId);
+	Response response = target.request().put(Entity.json(values));
+	if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+	    logger.debug("response code: " + response.getStatus());
+	    return true;
+	}
+	logger.error("response code: " + response.getStatus());
+	return false;
+
     }
 }

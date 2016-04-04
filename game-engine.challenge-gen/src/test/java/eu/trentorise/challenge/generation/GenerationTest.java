@@ -8,7 +8,9 @@ import static eu.trentorise.challenge.PropertiesUtil.get;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,13 +48,13 @@ public class GenerationTest {
 	    IllegalArgumentException, IOException {
 	// load
 	ChallengeRules result = ChallengeRulesLoader
-		.load("challengesRules.csv");
+		.load("BetaTestChallenges.csv");
 
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
 	// get users from gamification engine
 	// TODO paginazione risultati da gamification engine
-	List<Content> users = facade.readGameState("56e7bf3b570ac89331c37262");
+	List<Content> users = facade.readGameState(get(GAMEID));
 
 	// generate challenges
 	Matcher matcher = new Matcher(result.getChallenges().get(0));
@@ -66,7 +68,7 @@ public class GenerationTest {
 	    IllegalArgumentException, IOException, UndefinedChallengeException {
 	// load
 	ChallengeRules result = ChallengeRulesLoader
-		.load("challengesRules.csv");
+		.load("BetaTestChallenges.csv");
 
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
@@ -108,6 +110,7 @@ public class GenerationTest {
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
 		new ChallengeFactory());
 
+	Map<String, Map<String, Object>> playerIdCustomData = new HashMap<String, Map<String, Object>>();
 	// generate challenges
 	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
 	    logger.debug("rules generation for challenge: "
@@ -120,6 +123,14 @@ public class GenerationTest {
 	    logger.debug("generated rules \n" + res + "\n");
 
 	    assertTrue(!res.isEmpty());
+
+	    // update custom data for every user in challenge
+	    playerIdCustomData = crg.getPlayerIdCustomData();
+	    for (Content user : filteredUsers) {
+		insertFacade.updateChallengeCustomData(get(GAMEID),
+			user.getPlayerId(),
+			playerIdCustomData.get(user.getPlayerId()));
+	    }
 
 	    // define rule
 	    RuleDto rule = new RuleDto();

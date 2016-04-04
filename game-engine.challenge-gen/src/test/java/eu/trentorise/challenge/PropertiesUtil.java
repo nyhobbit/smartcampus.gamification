@@ -17,6 +17,8 @@ public final class PropertiesUtil {
     public static final String CONTEXT = "CONTEXT";
     public static final String INSERT_CONTEXT = "INSERT_CONTEXT";
     public static final String GAMEID = "GAMEID";
+    public static final String USERNAME = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
 
     private static Properties prop;
 

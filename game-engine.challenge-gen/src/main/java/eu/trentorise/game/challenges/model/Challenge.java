@@ -98,4 +98,8 @@ public abstract class Challenge {
 	return templateParams;
     }
 
+    public HashMap<String, Object> getCustomData() {
+	return customData;
+    }
+
 }

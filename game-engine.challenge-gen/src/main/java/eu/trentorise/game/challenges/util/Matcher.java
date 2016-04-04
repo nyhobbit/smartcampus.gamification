@@ -24,7 +24,7 @@ public class Matcher {
     public Matcher(ChallengeRuleRow challenge) {
 	this.challenge = challenge;
 	this.manager = new ScriptEngineManager();
-	this.engine = manager.getEngineByName("nashorn");
+	this.engine = manager.getEngineFactories().get(0).getScriptEngine();
     }
 
     public List<Content> match(List<Content> users) {

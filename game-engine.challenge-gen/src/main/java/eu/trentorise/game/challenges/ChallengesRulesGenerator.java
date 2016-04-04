@@ -21,9 +21,11 @@ public class ChallengesRulesGenerator {
 
     private StringBuffer buffer;
     private ChallengeFactoryInterface factory;
+    private Map<String, Map<String, Object>> playerIdCustomData;
 
     public ChallengesRulesGenerator(ChallengeFactoryInterface factory) {
 	this.buffer = new StringBuffer();
+	this.playerIdCustomData = new HashMap<String, Map<String, Object>>();
 	this.factory = factory;
     }
 
@@ -66,6 +68,9 @@ public class ChallengesRulesGenerator {
 	    c.setTemplateParams(params);
 	    c.compileChallenge(user.getPlayerId());
 	    buffer.append(c.getGeneratedRules());
+
+	    // save custom data for user for later use
+	    playerIdCustomData.put(user.getPlayerId(), c.getCustomData());
 	}
 	// remove package declaration after first
 	// TODO: we have to find a better way to fix this
@@ -95,6 +100,10 @@ public class ChallengesRulesGenerator {
 	}
 	// lines now contains all the strings between line breaks
 	return buffer.toString();
+    }
+
+    public Map<String, Map<String, Object>> getPlayerIdCustomData() {
+	return playerIdCustomData;
     }
 
 }
