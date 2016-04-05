@@ -92,7 +92,7 @@ public class GenerationTest {
 	    assertTrue(!res.isEmpty());
 
 	}
-    }
+    }  
 
     @Test
     public void generateChallengeRulesAndInsertToGamificationEngine()

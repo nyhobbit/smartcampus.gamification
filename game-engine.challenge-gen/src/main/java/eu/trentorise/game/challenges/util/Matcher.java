@@ -38,11 +38,11 @@ public class Matcher {
     }
 
     private boolean challengeMatch(Content user) {
-	// if (challenge.getType().equals("PERCENT")) {
-	return percentMatch(user);
-	// }
+	//if (challenge.getType().equals("PERCENT")) 
+		return percentMatch(user);
 	// return false;
     }
+    
 
     private boolean percentMatch(Content user) {
 	String criteria = challenge.getSelectionCriteria();
