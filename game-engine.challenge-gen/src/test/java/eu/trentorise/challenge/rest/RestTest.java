@@ -78,7 +78,7 @@ public class RestTest {
     @Test
     public void saveUsersItineraryLoadedFromFile() throws IOException {
 	// create input
-	String ref = "savedtrips1.json";
+	String ref = "178-bus.json";
 
 	// read all lines from file
 	@SuppressWarnings("unchecked")

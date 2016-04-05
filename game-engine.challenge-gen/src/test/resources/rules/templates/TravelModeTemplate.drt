@@ -33,13 +33,13 @@ CustomData to have   []=used by
 	
 template TravelModeTemplate
 
-/* Player @{ch_player}: fai almeno viaggi in @{ch_mode} e vinci @{ch_point_type} */
-
 rule "ch_@{ch_ID}_trace"
+/* Player @{ch_player}: fai almeno viaggi in @{ch_mode} e vinci @{ch_point_type} */
 no-loop
 when 
 	InputData($distance : data['@{ch_mode}']!=null, $distance > @{ch_mode}_try_min)
-	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_counter'] )
+	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_counter'],
+		$success : this['ch_@{ch_ID}_success'] != true )
 	$pc : PointConcept(name == "@{ch_point_type}")
 	Player(id == "@{ch_player}") 
 then
@@ -54,7 +54,8 @@ end
 
 rule 'ch_@{ch_ID}_check'
 when
-	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this['ch_@{ch_ID}_counter'] == this['ch_@{ch_ID}_target'])
+	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this['ch_@{ch_ID}_counter'] == this['ch_@{ch_ID}_target'],
+		$success : this['ch_@{ch_ID}_success'] != true)
 	$pc : PointConcept(name == "@{ch_point_type}")
 	Player(id == "@{ch_player}")
 then

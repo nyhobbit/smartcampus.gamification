@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,7 @@ public abstract class Challenge {
 	customData.put(Constants.CH + this.chId + Constants.TYPE, this.type);
 	// add beginning and end of challenge
 	Calendar calendar = new GregorianCalendar();
+	calendar.setTime(new Date());
 	calendar.add(Calendar.DAY_OF_MONTH, 1); // tomorrow
 	customData.put(Constants.CH + this.chId + Constants.START_CHTS,
 		calendar.getTimeInMillis());

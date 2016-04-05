@@ -57,11 +57,13 @@ public class GenerationTest {
 	List<Content> users = facade.readGameState(get(GAMEID));
 
 	// generate challenges
-	Matcher matcher = new Matcher(result.getChallenges().get(0));
-	List<Content> r = matcher.match(users);
+	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
+		Matcher matcher = new Matcher(challengeSpec);
+		List<Content> r = matcher.match(users);
 
-	assertTrue(!r.isEmpty());
-    }
+		assertTrue(!r.isEmpty());
+	}
+	}
 
     @Test
     public void loadTestGeneration() throws NullPointerException,
