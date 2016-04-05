@@ -100,7 +100,7 @@ public class GenerationTest {
 	    UndefinedChallengeException {
 	// load
 	ChallengeRules result = ChallengeRulesLoader
-		.load("challengesRules.csv");
+		.load("BetaTestChallenges.csv");
 
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
