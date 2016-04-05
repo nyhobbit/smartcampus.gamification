@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import eu.trentorise.game.managers.DroolsEngine;
 
 global Double busDistance_try_min;
+global Double bikeDistance_try_min;
+global Double trainDistance_try_min;
 
 // ***************************************** queries 
 
