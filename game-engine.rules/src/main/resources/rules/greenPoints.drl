@@ -5,11 +5,14 @@ global Integer green_bike_points;
 global Integer green_sustainable_bonus;
 global Integer recommendation_bonus;
 global Integer green_bus_points_base;
+global Integer green_bus_points_step0;
 global Integer green_bus_points_step1;
 global Integer green_bus_points_step2;
 global Integer green_bus_points_step3;
-global Integer zero_impact_booster;
+global Double zero_impact_booster;
+global Double sustainable_booster;
 
+global Double bus_threshold_step0;
 global Double bus_threshold_step1;
 global Double bus_threshold_step2;
 global Double bus_threshold_step3;
@@ -27,17 +30,23 @@ end
 
 rule "public transport update green points"
 when
-	InputData($bus : data["busDistance"] !=null || $train : data["trainDistance"] != null)
+	InputData($bus : data["busDistance"] !=null || $train : data["trainDistance"] != null , $sustainable : data["sustainable"])
 	$pc : PointConcept(name == "green leaves")
 then
+
+	boolean isSustainable = $sustainable != null ? (Boolean)$sustainable : false;
+	long score_sustainable = 0l;
+	
 	log("apply \'public transport update green points\'");	
 	if ($bus == null) 
 		$bus = 0d;
 	if ($train == null)
 		$train = 0d;
-	Long ptDistance = Math.round((Double)$bus + (Double)$train);
+	Double ptDistance = (Double)$bus + (Double)$train;
 	Integer ptPoints;
-	if (ptDistance >= bus_threshold_step1 && ptDistance < bus_threshold_step2)
+	if (ptDistance >= bus_threshold_step0 && ptDistance < bus_threshold_step1)
+		ptPoints = green_bus_points_step0;
+	else if (ptDistance >= bus_threshold_step1 && ptDistance < bus_threshold_step2)
 		ptPoints = green_bus_points_step1;
 	else if (ptDistance >= bus_threshold_step2 && ptDistance < bus_threshold_step3)
 		ptPoints = green_bus_points_step2;
@@ -46,33 +55,45 @@ then
 	else
 		ptPoints = green_bus_points_base;
 		
-		$pc.setScore($pc.getScore() + ptPoints);
-		update($pc);
-		insert(new PointDelta(ptPoints,"green leaves")); 
+	if (isSustainable)
+	 	score_sustainable = Math.round(ptPoints * sustainable_booster);
+		
+	$pc.setScore($pc.getScore() + ptPoints + score_sustainable);
+	update($pc);
+	insert(new PointDelta(ptPoints + score_sustainable,"green leaves")); 
 end
 
-rule "0-impact update green points"
+rule "0-impact - sustainable - walk - bike - update green points"
 when
-	InputData($bike : data["bikeDistance"], $walk : data["walkDistance"], $bus : data["busDistance"], $train : data["trainDistance"], $car : data["carDistance"])
+	InputData($bike : data["bikeDistance"], $walk : data["walkDistance"], $bus : data["busDistance"], $train : data["trainDistance"], $car : data["carDistance"], $sustainable : data["sustainable"])
 	$pc : PointConcept( name == "green leaves")
 then
 	boolean zeroImpact = ($walk != null || $bike != null) && (($bus == null || ((Double)$bus) == 0) &&  ($car == null || ((Double)$car) == 0) && ($train == null || ((Double)$train) == 0));
+	boolean isSustainable = $sustainable != null ? (Boolean)$sustainable : false;
 	
-	Double walkDistance = $walk != null ? (Double) $walk : 0;
-	walkDistance = walkDistance < walk_min ? 0 : walkDistance;
+	long score_zeroImpact = 0l;
+	long score_sustainable = 0l;
+	
+	Double walkDistance = $walk != null ? (Double) $walk : 0.0;
+	walkDistance = walkDistance < walk_min ? 0.0 : walkDistance;
 	walkDistance = walkDistance > walk_max ? walk_max : walkDistance;
 	
-	Double bikeDistance = $bike != null ? (Double) $bike : 0;
+	Double bikeDistance = $bike != null ? (Double) $bike : 0.0;
 	bikeDistance = bikeDistance > bike_max ? bike_max : bikeDistance;
 	
-	Long score = Math.round(walkDistance * green_walk_points)  + Math.round(bikeDistance * green_bike_points) ;
-	score = zeroImpact ? score * zero_impact_booster : score; 
-	$pc.setScore($pc.getScore() + score);
+	long score = Math.round(walkDistance * green_walk_points)  + Math.round(bikeDistance * green_bike_points) ;
+	
+	if (zeroImpact)
+		score_zeroImpact = Math.round(zero_impact_booster * score);	
+ 	if (isSustainable)
+	 	score_sustainable = Math.round(score * sustainable_booster);
+	
+	$pc.setScore($pc.getScore() + score + score_zeroImpact + score_sustainable);
 	update($pc);
-	insert(new PointDelta(score,"green leaves"));
+	insert(new PointDelta(score + score_zeroImpact + score_sustainable,"green leaves"));
 end
 
-rule "green sustainable bonus"
+/*rule "green sustainable bonus"
 	salience 1
 when
     InputData(data['sustainable'] == true)
@@ -82,7 +103,7 @@ then
 	$pc.setScore($pc.getScore() + green_sustainable_bonus);
     update($pc);
     insert(new PointDelta(green_sustainable_bonus,"green leaves")); 
-end
+end*/
 
 rule "recommendation bonus"
 	salience 1
