@@ -33,9 +33,8 @@ CustomData to have   []=used by
 	
 template TravelModeTemplate
 
-/* Player @{ch_player}: fai almeno viaggi in @{ch_mode} e vinci @{ch_point_type} */
-
 rule "ch_@{ch_ID}_trace"
+/* Player @{ch_player}: fai almeno viaggi in @{ch_mode} e vinci @{ch_point_type} */
 no-loop
 when 
 	InputData($distance : data['@{ch_mode}']!=null, $distance > @{ch_mode}_try_min)

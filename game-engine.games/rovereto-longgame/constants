@@ -42,7 +42,6 @@ train_threshold_step2=20.0
 # bikesharing_collection = 1, 5, 10, 20, 50, 100
 # zero_impact_collection = 1, 5, 10, 20, 50, 100
 
-
 #soglie di rilevanza per modo
 walk_min=0.1
 walk_max=5.0

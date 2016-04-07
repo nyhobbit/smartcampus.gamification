@@ -57,11 +57,13 @@ public class GenerationTest {
 	List<Content> users = facade.readGameState(get(GAMEID));
 
 	// generate challenges
-	Matcher matcher = new Matcher(result.getChallenges().get(0));
-	List<Content> r = matcher.match(users);
+	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
+		Matcher matcher = new Matcher(challengeSpec);
+		List<Content> r = matcher.match(users);
 
-	assertTrue(!r.isEmpty());
-    }
+		assertTrue(!r.isEmpty());
+	}
+	}
 
     @Test
     public void loadTestGeneration() throws NullPointerException,
@@ -124,9 +126,12 @@ public class GenerationTest {
 
 	    assertTrue(!res.isEmpty());
 
+	    
 	    // update custom data for every user in challenge
 	    playerIdCustomData = crg.getPlayerIdCustomData();
 	    for (Content user : filteredUsers) {
+		    System.out.println(playerIdCustomData.get(user.getPlayerId()).toString());
+		    // TODO: capire se e quando tutti i custom data sono generati ed aggiornati per gli utenti nel caso in cui ci sono due challenge  definite nel csv
 		insertFacade.updateChallengeCustomData(get(GAMEID),
 			user.getPlayerId(),
 			playerIdCustomData.get(user.getPlayerId()));
