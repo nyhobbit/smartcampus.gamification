@@ -212,8 +212,8 @@ public class GamificationEngineRestFacade {
 	try {
 	    System.out.println(mapper.writeValueAsString(values));
 	} catch (JsonProcessingException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logger.error(e);
+	    return false;
 	}
 	WebTarget target = getTarget().path(GAME).path(gameId).path(PLAYER)
 		.path(playerId);

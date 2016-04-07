@@ -1,11 +1,16 @@
 package eu.trentorise.game.challenges;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import eu.trentorise.game.challenges.api.ChallengeFactoryInterface;
 import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
@@ -13,20 +18,35 @@ import eu.trentorise.game.challenges.model.Challenge;
 import eu.trentorise.game.challenges.model.ChallengeType;
 import eu.trentorise.game.challenges.rest.Content;
 import eu.trentorise.game.challenges.util.ChallengeRuleRow;
+import eu.trentorise.game.challenges.util.ChallengeRulesLoader;
 
 /**
  * Generate rules for challenges
  */
 public class ChallengesRulesGenerator {
 
+    private static final String LINE_SEPARATOR = System
+	    .getProperty("line.separator");
+    private static final Logger logger = LogManager
+	    .getLogger(ChallengeRulesLoader.class);
+
     private StringBuffer buffer;
     private ChallengeFactoryInterface factory;
     private Map<String, Map<String, Object>> playerIdCustomData;
+    private StringBuffer reportBuffer;
 
-    public ChallengesRulesGenerator(ChallengeFactoryInterface factory) {
+    private final String reportHeader = "PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;START_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID\n";
+    private FileOutputStream fout;
+
+    public ChallengesRulesGenerator(ChallengeFactoryInterface factory,
+	    String reportName) throws IOException {
 	this.buffer = new StringBuffer();
 	this.playerIdCustomData = new HashMap<String, Map<String, Object>>();
 	this.factory = factory;
+	// prepare report output
+	fout = new FileOutputStream(reportName);
+	// write header
+	IOUtils.write(reportHeader, fout);
     }
 
     /**
@@ -37,14 +57,17 @@ public class ChallengesRulesGenerator {
      * @param users
      * @return
      * @throws UndefinedChallengeException
+     * @throws IOException
      */
     public String generateRules(ChallengeRuleRow challengeSpec,
 	    List<Content> users, String templateDir)
-	    throws UndefinedChallengeException {
+	    throws UndefinedChallengeException, IOException {
 	Map<String, Object> params = new HashMap<String, Object>();
 	buffer = new StringBuffer();
 	buffer.append("/** " + challengeSpec.getType() + " "
 		+ challengeSpec.getTarget().toString() + " **/\n");
+
+	reportBuffer = new StringBuffer();
 
 	// get right challenge
 	for (Content user : users) {
@@ -69,18 +92,31 @@ public class ChallengesRulesGenerator {
 	    c.compileChallenge(user.getPlayerId());
 	    buffer.append(c.getGeneratedRules());
 
-	    System.out.println("----");
-	    System.out
-		    .println("PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;START_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID");
-	    System.out.println(user.getPlayerId() + ";"
-		    + challengeSpec.getName() + ";" + c.toString());
-	    System.out.println("----");
+	    reportBuffer.append(user.getPlayerId() + ";"
+		    + challengeSpec.getName() + ";" + c.toString() + "\n");
 	    // save custom data for user for later use
 	    playerIdCustomData.put(user.getPlayerId(), c.getCustomData());
 	}
+	// write report to file
+	IOUtils.write(reportBuffer.toString(), fout);
+
 	// remove package declaration after first
-	// TODO: we have to find a better way to fix this
-	String temp = buffer.toString();
+	String result = filterPackageDeclaration(buffer.toString());
+	return result;
+    }
+
+    public void closeStream() throws IOException {
+	if (fout != null) {
+	    fout.close();
+	}
+    }
+
+    /**
+     * Filter buffer from package declaration after first one
+     * 
+     * @return filtered string or null if error
+     */
+    private String filterPackageDeclaration(String temp) {
 	buffer = new StringBuffer();
 	boolean remove = false;
 	try {
@@ -89,23 +125,20 @@ public class ChallengesRulesGenerator {
 		    .readLine()) {
 		if (line.startsWith("package") && !remove) {
 		    remove = true;
-		    buffer.append(line).append(
-			    System.getProperty("line.separator"));
+		    buffer.append(line).append(LINE_SEPARATOR);
 
 		} else if (line.startsWith("package") && remove) {
 		    // do nothing
 		} else {
-		    buffer.append(line).append(
-			    System.getProperty("line.separator"));
-
+		    buffer.append(line).append(LINE_SEPARATOR);
 		}
 	    }
 	    rdr.close();
+	    return buffer.toString();
 	} catch (IOException e) {
-	    // TODO log
+	    logger.error(e);
 	}
-	// lines now contains all the strings between line breaks
-	return buffer.toString();
+	return null;
     }
 
     public Map<String, Map<String, Object>> getPlayerIdCustomData() {
