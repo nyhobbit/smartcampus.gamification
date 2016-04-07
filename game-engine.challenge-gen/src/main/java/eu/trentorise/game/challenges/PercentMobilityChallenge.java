@@ -82,4 +82,16 @@ public class PercentMobilityChallenge extends Challenge {
 		    "challenge cannot be compiled for user " + playerId, ioe);
 	}
     }
+
+    @Override
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
+	sb.append(this.type + ";");
+	sb.append(this.baseline + ";");
+	sb.append(this.baseline * (1 + this.percent) + ";");
+	sb.append(this.prize + ";");
+	sb.append(this.pointType + ";");
+	sb.append(this.chId);
+	return sb.toString();
+    }
 }

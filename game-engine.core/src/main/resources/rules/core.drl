@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.trentorise.game.managers.DroolsEngine;
 
-global Double busDistance_try_min;
-
 // ***************************************** queries 
 
 query "getGameConcepts"

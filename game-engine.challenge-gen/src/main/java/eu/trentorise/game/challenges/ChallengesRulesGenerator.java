@@ -69,6 +69,12 @@ public class ChallengesRulesGenerator {
 	    c.compileChallenge(user.getPlayerId());
 	    buffer.append(c.getGeneratedRules());
 
+	    System.out.println("----");
+	    System.out
+		    .println("PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;START_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID");
+	    System.out.println(user.getPlayerId() + ";"
+		    + challengeSpec.getName() + ";" + c.toString());
+	    System.out.println("----");
 	    // save custom data for user for later use
 	    playerIdCustomData.put(user.getPlayerId(), c.getCustomData());
 	}
