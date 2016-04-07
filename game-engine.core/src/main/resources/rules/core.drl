@@ -9,10 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.trentorise.game.managers.DroolsEngine;
 
-global Double busDistance_try_min;
-global Double bikeDistance_try_min;
-global Double trainDistance_try_min;
-
 // ***************************************** queries 
 
 query "getGameConcepts"
@@ -27,8 +23,20 @@ query "getCustomData"
 	$data: CustomData()
 end
 
-query "getUpdateTeam"
-	$data: UpdateTeam()
+query "getUpdateTeams"
+	$data: UpdateTeams()
+end
+
+query "getUpdateMembers"
+	$data: UpdateMembers()
+end
+
+query "getLevel"
+	Propagation($data: level)
+end
+
+query "getMember"
+	$data: Member()
 end
 
 // ****************************************** global functions 	

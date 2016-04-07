@@ -59,7 +59,6 @@ public class FactoryTest {
 	    c.setTemplateParams(params);
 	    c.compileChallenge(testUserId);
 	} catch (UndefinedChallengeException uce) {
-	    // TODO Auto-generated catch block
 	    uce.printStackTrace();
 	}
 	Assert.assertTrue("Challenge " + ChallengeType.TRIPNUMBER + " created",
@@ -81,7 +80,6 @@ public class FactoryTest {
 	    c.setTemplateParams(params);
 	    c.compileChallenge(testUserId);
 	} catch (UndefinedChallengeException uce) {
-	    // TODO Auto-generated catch block
 	    uce.printStackTrace();
 	}
 	Assert.assertTrue("Challenge " + ChallengeType.BADGECOLLECTION
@@ -102,7 +100,6 @@ public class FactoryTest {
 	    c.setTemplateParams(params);
 	    c.compileChallenge(testUserId);
 	} catch (UndefinedChallengeException uce) {
-	    // TODO Auto-generated catch block
 	    uce.printStackTrace();
 	}
 	Assert.assertTrue("Challenge " + ChallengeType.RECOMMENDATION

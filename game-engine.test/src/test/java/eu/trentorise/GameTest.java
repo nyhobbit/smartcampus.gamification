@@ -21,7 +21,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +45,7 @@ import eu.trentorise.game.model.BadgeCollectionConcept;
 import eu.trentorise.game.model.Game;
 import eu.trentorise.game.model.PlayerState;
 import eu.trentorise.game.model.PointConcept;
+import eu.trentorise.game.model.TeamState;
 import eu.trentorise.game.model.core.ClasspathRule;
 import eu.trentorise.game.model.core.FSRule;
 import eu.trentorise.game.model.core.GameConcept;
@@ -59,7 +63,7 @@ public abstract class GameTest {
 	private String gameId;
 	private List<GameTask> tasks = new ArrayList<GameTask>();
 
-	private static final long WAIT_EXEC = 30 * 1000;
+	private static final long WAIT_EXEC = 15 * 1000;
 
 	@Autowired
 	private GameManager gameManager;
@@ -109,9 +113,7 @@ public abstract class GameTest {
 
 	public void savePlayerState(String gameId, String playerId,
 			List<GameConcept> concepts) {
-		PlayerState player = new PlayerState(gameId, playerId);
-		player.setState(new HashSet<GameConcept>(concepts));
-		mongo.save(new StatePersistence(player));
+		savePlayerState(gameId, playerId, concepts, null);
 	}
 
 	public void savePlayerState(String gameId, String playerId,
@@ -121,7 +123,31 @@ public abstract class GameTest {
 		if (customData != null) {
 			player.getCustomData().putAll(customData);
 		}
-		mongo.save(new StatePersistence(player));
+		playerSrv.saveState(player);
+	}
+
+	public void saveTeam(String gameId, String teamId, String name,
+			Set<String> members) {
+		saveTeam(gameId, teamId, name, members, null, null);
+	}
+
+	public void saveTeam(String gameId, String teamId, String name,
+			Set<String> members, List<GameConcept> concepts) {
+		saveTeam(gameId, teamId, name, members, concepts, null);
+	}
+
+	public void saveTeam(String gameId, String teamId, String name,
+			Set<String> members, List<GameConcept> concepts,
+			Map<String, Object> customData) {
+		TeamState team = new TeamState(gameId, teamId);
+		team.setName(name);
+		if (members != null) {
+			team.setMembers(new ArrayList<>(members));
+		}
+		playerSrv.saveTeam(team);
+		if (concepts != null || customData != null) {
+			savePlayerState(gameId, teamId, concepts, customData);
+		}
 	}
 
 	public void defineGameHelper(String gameId, List<String> actions,
@@ -192,22 +218,59 @@ public abstract class GameTest {
 		StateAnalyzer analyzer = new StateAnalyzer(states);
 		List<String> badgesEarned = analyzer.getBadges(
 				analyzer.findPlayer(playerId), conceptName);
-		Assert.assertTrue(
-				String.format(
-						"Failure badgecollection concept %s for  player %s",
-						conceptName, playerId),
-				new HashSet<String>(values).containsAll(badgesEarned)
-						&& values.size() == badgesEarned.size());
+		Assert.assertEquals(new HashSet<String>(values), new HashSet<String>(
+				badgesEarned));
 	}
 
 	public void assertionPoint(String gameId, Double score, String playerId,
 			String conceptName) {
 		List<PlayerState> states = playerSrv.loadStates(gameId);
 		StateAnalyzer analyzer = new StateAnalyzer(states);
-		Assert.assertTrue(String.format(
+		Assert.assertEquals(String.format(
 				"Failure point concept %s for  player %s", conceptName,
-				playerId), score.equals(analyzer.getScore(
-				analyzer.findPlayer(playerId), conceptName)));
+				playerId), score.doubleValue(), analyzer.getScore(
+				analyzer.findPlayer(playerId), conceptName), 0);
+	}
+
+	public void assertionCustomData(String gameId, String playerId, String key,
+			Object value) {
+		List<PlayerState> states = playerSrv.loadStates(gameId);
+		StateAnalyzer analyzer = new StateAnalyzer(states);
+		PlayerState ps = analyzer.findPlayer(playerId);
+		Assert.assertNotNull(String.format(
+				"player %s has not state in game %s", playerId, gameId), ps);
+		Object dataValue = ps.getCustomData().get(key);
+		Assert.assertNotNull(String.format(
+				"customData %s of player %s not exist in game %s", key,
+				playerId, gameId), dataValue);
+		Assert.assertEquals(
+				String.format("customData %s of player %s", key, playerId),
+				value, dataValue);
+	}
+
+	public void assertionAnyCustomData(String gameId, String playerId,
+			Map<String, Object> customData) {
+		List<PlayerState> states = playerSrv.loadStates(gameId);
+		StateAnalyzer analyzer = new StateAnalyzer(states);
+		PlayerState ps = analyzer.findPlayer(playerId);
+		Assert.assertNotNull(String.format(
+				"player %s has not state in game %s", playerId, gameId), ps);
+		for (Entry<String, Object> entry : customData.entrySet()) {
+			Assert.assertThat(String
+					.format("customData of player %s", playerId), ps
+					.getCustomData().entrySet(), CoreMatchers.hasItem((entry)));
+		}
+	}
+
+	public void assertionSameCustomData(String gameId, String playerId,
+			Map<String, Object> customData) {
+		List<PlayerState> states = playerSrv.loadStates(gameId);
+		StateAnalyzer analyzer = new StateAnalyzer(states);
+		PlayerState ps = analyzer.findPlayer(playerId);
+		Assert.assertNotNull(String.format(
+				"player %s has not state in game %s", playerId, gameId), ps);
+		Assert.assertEquals(String.format("customData of player %s", playerId),
+				customData, ps.getCustomData());
 	}
 
 	protected class ExecData {
