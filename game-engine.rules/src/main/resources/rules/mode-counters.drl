@@ -21,7 +21,7 @@ then
 		if ($counterZero == null)
 			$c.put("zero_impact_trips", 1);
 		else 
-			$c.put("zero_impact_trips", (Integer) $counterZeroPast + 1);
+			$c.put("zero_impact_trips", (Integer) $counterZero + 1);
 		update ($c);
 end
 
