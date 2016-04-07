@@ -10,15 +10,21 @@
 <link href="css/bootstrap-theme.min.css" rel="stylesheet" />
 <link href="css/xeditable.css" rel="stylesheet" />
 <link href="css/modaldialog.css" rel="stylesheet" />
+<link href="css/angular-socialshare.css" rel="stylesheet">
+<link href="css/gg_style.css" rel="stylesheet" />
 <link href="img/gamification.ico" rel="shortcut icon" type="image/x-icon" />
 
 <!-- required libraries -->
+<!-- <script src="https://apis.google.com/js/platform.js" async defer>
+    {lang: 'it'}
+</script> -->
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="lib/angular.js"></script>
 <script src="js/localize.js" type="text/javascript"></script>
 <script src="lib/angular-route.js"></script>
 <script src="lib/angular-sanitize.js"></script>
+<script src="lib/angular-socialshare.js"></script>
 <script src="lib/ui-bootstrap-tpls.min.js"></script>
 <script src="js/dialogs.min.js" type="text/javascript"></script>
 <script src="js/app.js"></script>
@@ -52,7 +58,6 @@
 		background: url(img/paginaAccesso-56-56-56.svg) no-repeat center center fixed;
 	}
 </style>
-
 </head>
 
 <body>
@@ -70,7 +75,7 @@
 							<![endif]-->
 							<div class="row" style="font-size: 18px; color: red" align="center" id="cookies">
 							</div>
-							<div class="row" style="height: 20px" align="center" ng-show="isIe10==true">
+							<div class="row" style="height: 20px" align="center" ng-if="isIe10==true">
 								<h4><font color="red">Alcune funzionalit&agrave; del portale non sono supportate in Internet Explorer. Utilizza un altro browser per accedere al portale.</font></h4>
 							</div>
 							<div style="margin: 50px 5px 5px 5px" align="center">
@@ -85,7 +90,9 @@
 							<div class="row" style="height: 150px; margin-top: 80px" align="center">
 								&nbsp;
 								&nbsp;
-								<a id="btn_login_test" href="login" class="btn btn-success btn-lg" role="button" ng-click="getOldLogin()" disabled="false"><font face="Raleway" size="4"><strong>Accedi con Google</strong></font></a>
+								<a id="btn_login_test" href="login" class="btn btn-success btn-lg buttonaccess" role="button" ng-click="getOldLogin()" disabled="false"><font face="Raleway" size="4"><strong>Accedi con Google</strong></font></a>
+								&nbsp;
+								<a id="btn_login_facebook" href="loginfb" class="btn btn-success btn-lg buttonaccess" role="button" ng-click="getOldLogin()" disabled="false"><font face="Raleway" size="4"><strong>Accedi con Facebook</strong></font></a>
 							</div>
 							<div class="row" align="center">
 								<img src="img/lineaPaginaAccesso-57.svg" width="95%" alt="" title="" />
@@ -109,11 +116,11 @@
 	if(!cookieEnabled){
 		document.getElementById("cookies").innerHTML = "Il tuo browser sembra non avere i cookie attivi. E' necessario attivarli per utilizzare il portale. Clicca <a href='cookie_info'>QUI</a> per maggiori informazioni";
 		$("#btn_login_prod").attr("disabled", "disabled");
-	 	$("#btn_login_console").attr("disabled", "disabled");
+	 	$("#btn_login_facebook").attr("disabled", "disabled");
 	 	$("#btn_login_test").attr("disabled", "disabled");
 	} else {
 		$("#btn_login_prod").removeAttr("disabled");
-	 	$("#btn_login_console").removeAttr("disabled");
+	 	$("#btn_login_facebook").removeAttr("disabled");
 	 	$("#btn_login_test").removeAttr("disabled");
 	}
 </script>
