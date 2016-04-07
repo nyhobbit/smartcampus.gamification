@@ -52,18 +52,16 @@ public class GenerationTest {
 
 	assertTrue(result != null && !result.getChallenges().isEmpty());
 
-	// get users from gamification engine
-	// TODO paginazione risultati da gamification engine
 	List<Content> users = facade.readGameState(get(GAMEID));
 
 	// generate challenges
 	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
-		Matcher matcher = new Matcher(challengeSpec);
-		List<Content> r = matcher.match(users);
+	    Matcher matcher = new Matcher(challengeSpec);
+	    List<Content> r = matcher.match(users);
 
-		assertTrue(!r.isEmpty());
+	    assertTrue(!r.isEmpty());
 	}
-	}
+    }
 
     @Test
     public void loadTestGeneration() throws NullPointerException,
@@ -78,7 +76,7 @@ public class GenerationTest {
 	List<Content> users = facade.readGameState(get(GAMEID));
 
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
-		new ChallengeFactory());
+		new ChallengeFactory(), "generated-rules-report.csv");
 
 	// generate challenges
 	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
@@ -87,14 +85,17 @@ public class GenerationTest {
 	    Matcher matcher = new Matcher(challengeSpec);
 	    List<Content> filteredUsers = matcher.match(users);
 	    logger.debug("found users: " + filteredUsers.size());
+	    // generate rule
 	    String res = crg.generateRules(challengeSpec, filteredUsers,
 		    "rules/templates");
+
 	    logger.debug("generated rules \n" + res + "\n");
 
 	    assertTrue(!res.isEmpty());
-
 	}
-    }  
+
+	crg.closeStream();
+    }
 
     @Test
     public void generateChallengeRulesAndInsertToGamificationEngine()
@@ -110,7 +111,7 @@ public class GenerationTest {
 	List<Content> users = facade.readGameState(get(GAMEID));
 
 	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
-		new ChallengeFactory());
+		new ChallengeFactory(), "generated-rules-report.csv");
 
 	Map<String, Map<String, Object>> playerIdCustomData = new HashMap<String, Map<String, Object>>();
 	// generate challenges
@@ -149,5 +150,7 @@ public class GenerationTest {
 	    }
 
 	}
+
+	crg.closeStream();
     }
 }

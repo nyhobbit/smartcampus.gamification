@@ -1,46 +1,42 @@
 package eu.trentorise.game.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import eu.trentorise.game.repo.StatePersistence;
+public class Team {
+	private String playerId;
+	private Map<String, Object> inputData;
 
-public class Team extends PlayerState {
-
-	public static final String NAME_METADATA = "team-name";
-
-	public static final String MEMBERS_METADATA = "team-members";
-
-	public Team(String gameId, String playerId) {
-		super(gameId, playerId);
+	public Team(String playerId) {
+		this.playerId = playerId;
+		this.inputData = new HashMap<String, Object>();
 	}
 
-	public Team(StatePersistence state) {
-		super(state);
-		if (state != null) {
-			name = (String) state.getMetadata().get(NAME_METADATA);
-			members = (List<String>) state.getMetadata().get(MEMBERS_METADATA);
-		}
+	public Team(String playerId, Map<String, Object> inputData) {
+		this.playerId = playerId;
+		this.inputData = inputData != null ? inputData
+				: new HashMap<String, Object>();
 	}
 
-	private String name;
-
-	private List<String> members = new ArrayList<>();
-
-	public String getName() {
-		return name;
+	public Map<String, Object> getInputData() {
+		return inputData;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setInputData(Map<String, Object> inputData) {
+		this.inputData = inputData;
 	}
 
-	public List<String> getMembers() {
-		return members;
+	public String getPlayerId() {
+		return playerId;
 	}
 
-	public void setMembers(List<String> members) {
-		this.members = members;
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s(playerId=%s, inputData=%s)", getClass()
+				.getSimpleName(), playerId, inputData);
+	}
 }

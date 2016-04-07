@@ -20,114 +20,128 @@ import it.sayservice.platform.smartplanner.data.message.StopId;
 
 import java.util.Arrays;
 
-
 public class CarStation {
-	
-	private String id;
-	private StopId stationId;
-	private String type;
-	private String fullName;
-	private double[] position;
-	private int availableSharingVehicles;
-	private int posts;
-	
-	/**
-	 * @param stationId
-	 * @param type
-	 * @param agencyId
-	 * @param position
-	 * @param number
-	 */
-	public CarStation(StopId stationId, String type,
-			double x, double y, int noAvialableVehicles, int post) {
-		super();
-		this.id = stationId.getId();
-		this.stationId = stationId;
-		this.type = type;
-		this.position =  new double[] {x, y};
-		this.availableSharingVehicles = noAvialableVehicles;
-		this.posts = post;
-		this.fullName = x + "," + y;
-	}
-	/**
+
+    private String id;
+    private StopId stationId;
+    private String type;
+    private String fullName;
+    private double[] position;
+    private int availableSharingVehicles;
+    private int posts;
+
+    /**
+     * @param stationId
+     * @param type
+     * @param agencyId
+     * @param position
+     * @param number
+     */
+    public CarStation(StopId stationId, String type, double x, double y,
+	    int noAvialableVehicles, int post) {
+	super();
+	this.id = stationId.getId();
+	this.stationId = stationId;
+	this.type = type;
+	this.position = new double[] { x, y };
+	this.availableSharingVehicles = noAvialableVehicles;
+	this.posts = post;
+	this.fullName = x + "," + y;
+    }
+
+    /**
 	 * 
 	 */
-	public CarStation() {
-		// TODO Auto-generated constructor stub
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public StopId getStationId() {
-		return stationId;
-	}
-	public void setStationId(StopId stationId) {
-		this.stationId = stationId;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public double[] getPosition() {
-		return position;
-	}
-	public void setPosition(double[] position) {
-		this.position = position;
-	}
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-	public int getAvailableSharingVehicles() {
-		return availableSharingVehicles;
-	}
-	public void setAvailableSharingVehicles(int availableSharingVehicles) {
-		this.availableSharingVehicles = availableSharingVehicles;
-	}
-	public int getPosts() {
-		return posts;
-	}
-	public void setPosts(int posts) {
-		this.posts = posts;
-	}
-	@Override
-	public String toString() {
-		return "CarStation [id=" + id + ", stationId=" + stationId + ", type="
-				+ type + ", fullName=" + fullName + ", position="
-				+ Arrays.toString(position) + ", availableSharingVehicles="
-				+ availableSharingVehicles + ", post=" + posts + "]";
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CarStation other = (CarStation) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-	
-	
-    
+    public CarStation() {
+    }
+
+    public String getId() {
+	return id;
+    }
+
+    public void setId(String id) {
+	this.id = id;
+    }
+
+    public StopId getStationId() {
+	return stationId;
+    }
+
+    public void setStationId(StopId stationId) {
+	this.stationId = stationId;
+    }
+
+    public String getType() {
+	return type;
+    }
+
+    public void setType(String type) {
+	this.type = type;
+    }
+
+    public double[] getPosition() {
+	return position;
+    }
+
+    public void setPosition(double[] position) {
+	this.position = position;
+    }
+
+    public String getFullName() {
+	return fullName;
+    }
+
+    public void setFullName(String fullName) {
+	this.fullName = fullName;
+    }
+
+    public int getAvailableSharingVehicles() {
+	return availableSharingVehicles;
+    }
+
+    public void setAvailableSharingVehicles(int availableSharingVehicles) {
+	this.availableSharingVehicles = availableSharingVehicles;
+    }
+
+    public int getPosts() {
+	return posts;
+    }
+
+    public void setPosts(int posts) {
+	this.posts = posts;
+    }
+
+    @Override
+    public String toString() {
+	return "CarStation [id=" + id + ", stationId=" + stationId + ", type="
+		+ type + ", fullName=" + fullName + ", position="
+		+ Arrays.toString(position) + ", availableSharingVehicles="
+		+ availableSharingVehicles + ", post=" + posts + "]";
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	CarStation other = (CarStation) obj;
+	if (id == null) {
+	    if (other.id != null)
+		return false;
+	} else if (!id.equals(other.id))
+	    return false;
+	return true;
+    }
+
 }

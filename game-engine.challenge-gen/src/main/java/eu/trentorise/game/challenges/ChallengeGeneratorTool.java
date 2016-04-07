@@ -136,8 +136,15 @@ public class ChallengeGeneratorTool {
 		.println("Reading game from gamification engine game state for gameId: "
 			+ gameId);
 
-	ChallengesRulesGenerator crg = new ChallengesRulesGenerator(
-		new ChallengeFactory());
+	ChallengesRulesGenerator crg;
+	try {
+	    crg = new ChallengesRulesGenerator(new ChallengeFactory(),
+		    "generated-rules-report.csv");
+	} catch (IOException e2) {
+	    System.err.println("Error in creating "
+		    + "generated-rules-report.csv");
+	    return;
+	}
 	FileOutputStream fout;
 	try {
 	    fout = new FileOutputStream(output);
@@ -156,9 +163,14 @@ public class ChallengeGeneratorTool {
 	    try {
 		res = crg.generateRules(challengeSpec, filteredUsers,
 			templateDir);
-	    } catch (UndefinedChallengeException e) {
+	    } catch (UndefinedChallengeException | IOException e) {
 		System.err.println("Error in challenge generation : "
 			+ e.getMessage());
+		try {
+		    crg.closeStream();
+		    fout.close();
+		} catch (IOException e1) {
+		}
 		return;
 	    }
 	    tot++;
@@ -186,8 +198,14 @@ public class ChallengeGeneratorTool {
 		return;
 	    }
 	}
+	try {
+	    crg.closeStream();
+	} catch (IOException e) {
+	    System.err.println("Error in closing stream file");
+	}
 	System.out.println("Generated rules: " + tot);
 	System.out.println("Written output file " + output);
+	System.out.println("Written report file generated-rules-report.csv");
 
     }
 
