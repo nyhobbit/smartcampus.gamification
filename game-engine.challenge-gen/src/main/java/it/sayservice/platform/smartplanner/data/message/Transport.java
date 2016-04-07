@@ -23,150 +23,151 @@ import java.io.Serializable;
  */
 public class Transport implements Serializable {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -3477444815169512553L;
+    private static final long serialVersionUID = -3477444815169512553L;
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((agencyId == null) ? 0 : agencyId.hashCode());
-		result = prime * result + ((routeId == null) ? 0 : routeId.hashCode());
-		result = prime * result + ((tripId == null) ? 0 : tripId.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result
+		+ ((agencyId == null) ? 0 : agencyId.hashCode());
+	result = prime * result + ((routeId == null) ? 0 : routeId.hashCode());
+	result = prime * result + ((tripId == null) ? 0 : tripId.hashCode());
+	result = prime * result + ((type == null) ? 0 : type.hashCode());
+	return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Transport other = (Transport) obj;
-		if (agencyId == null) {
-			if (other.agencyId != null)
-				return false;
-		} else if (!agencyId.equals(other.agencyId))
-			return false;
-		if (routeId == null) {
-			if (other.routeId != null)
-				return false;
-		} else if (!routeId.equals(other.routeId))
-			return false;
-		if (routeShortName == null) {
-			if (other.routeShortName != null)
-				return false;
-		} else if (!routeShortName.equals(other.routeShortName))
-			return false;		
-		if (tripId == null) {
-			if (other.tripId != null)
-				return false;
-		} else if (!tripId.equals(other.tripId))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Transport other = (Transport) obj;
+	if (agencyId == null) {
+	    if (other.agencyId != null)
+		return false;
+	} else if (!agencyId.equals(other.agencyId))
+	    return false;
+	if (routeId == null) {
+	    if (other.routeId != null)
+		return false;
+	} else if (!routeId.equals(other.routeId))
+	    return false;
+	if (routeShortName == null) {
+	    if (other.routeShortName != null)
+		return false;
+	} else if (!routeShortName.equals(other.routeShortName))
+	    return false;
+	if (tripId == null) {
+	    if (other.tripId != null)
+		return false;
+	} else if (!tripId.equals(other.tripId))
+	    return false;
+	if (type != other.type)
+	    return false;
+	return true;
+    }
 
-	public Transport(TType type, String agencyId, String routeId, String routeShortName, String tripId) {
-		super();
-		this.type = type;
-		this.agencyId = agencyId;
-		this.routeId = routeId;
-		this.routeShortName = routeShortName;
-		this.tripId = tripId;
-	}
+    public Transport(TType type, String agencyId, String routeId,
+	    String routeShortName, String tripId) {
+	super();
+	this.type = type;
+	this.agencyId = agencyId;
+	this.routeId = routeId;
+	this.routeShortName = routeShortName;
+	this.tripId = tripId;
+    }
 
-	// for compatibility only
-	public Transport(TType type, String agencyId, String routeId, String tripId) {
-		super();
-		this.type = type;
-		this.agencyId = agencyId;
-		this.routeId = routeId;
-		this.routeShortName = routeId;
-		this.tripId = tripId;
-	}	
-	
-	public Transport() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    // for compatibility only
+    public Transport(TType type, String agencyId, String routeId, String tripId) {
+	super();
+	this.type = type;
+	this.agencyId = agencyId;
+	this.routeId = routeId;
+	this.routeShortName = routeId;
+	this.tripId = tripId;
+    }
 
-	/**
-	 * Transport type
-	 */
-	private TType type;
-	
-	/**
-	 * Id of the agency
-	 */
-	private String agencyId;
-	
-	/**
-	 * Id of the route
-	 */
-	private String routeId;
-	
-	/**
-	 * Short name of the route
-	 */
-	private String routeShortName;	
-	
-	/**
-	 * Id of the trip
-	 */
-	private String tripId;
+    public Transport() {
+	super();
+    }
 
-	public TType getType() {
-		return type;
-	}
+    /**
+     * Transport type
+     */
+    private TType type;
 
-	public void setType(TType type) {
-		this.type = type;
-	}
+    /**
+     * Id of the agency
+     */
+    private String agencyId;
 
-	public String getRouteId() {
-		return routeId;
-	}
+    /**
+     * Id of the route
+     */
+    private String routeId;
 
-	public void setRouteId(String routeId) {
-		this.routeId = routeId;
-	}
+    /**
+     * Short name of the route
+     */
+    private String routeShortName;
 
-	public String getRouteShortName() {
-		return routeShortName;
-	}
+    /**
+     * Id of the trip
+     */
+    private String tripId;
 
-	public void setRouteShortName(String routeShortName) {
-		this.routeShortName = routeShortName;
-	}
+    public TType getType() {
+	return type;
+    }
 
-	public String getTripId() {
-		return tripId;
-	}
+    public void setType(TType type) {
+	this.type = type;
+    }
 
-	public void setTripId(String tripId) {
-		this.tripId = tripId;
-	}
-	public String getAgencyId() {
-		return agencyId;
-	}
+    public String getRouteId() {
+	return routeId;
+    }
 
-	public void setAgencyId(String agencyId) {
-		this.agencyId = agencyId;
-	}
+    public void setRouteId(String routeId) {
+	this.routeId = routeId;
+    }
 
-	@Override
-	public String toString() {
-		return "Transport [type=" + type + ", agencyId=" + agencyId
-				+ ", routeId=" + routeId + ",routeShortName=" + routeShortName + ", tripId=" + tripId + "]";
-	}
+    public String getRouteShortName() {
+	return routeShortName;
+    }
 
+    public void setRouteShortName(String routeShortName) {
+	this.routeShortName = routeShortName;
+    }
+
+    public String getTripId() {
+	return tripId;
+    }
+
+    public void setTripId(String tripId) {
+	this.tripId = tripId;
+    }
+
+    public String getAgencyId() {
+	return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+	this.agencyId = agencyId;
+    }
+
+    @Override
+    public String toString() {
+	return "Transport [type=" + type + ", agencyId=" + agencyId
+		+ ", routeId=" + routeId + ",routeShortName=" + routeShortName
+		+ ", tripId=" + tripId + "]";
+    }
 
 }
