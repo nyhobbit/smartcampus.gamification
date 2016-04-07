@@ -74,7 +74,8 @@ public class Matcher {
 	if (user != null && criteria != null && !criteria.isEmpty()
 		&& user.getCustomData() != null
 		&& user.getCustomData().getAdditionalProperties() != null
-		&& !user.getCustomData().getAdditionalProperties().isEmpty()) {
+		//&& !user.getCustomData().getAdditionalProperties().isEmpty()
+		) {
 	    List<String> vars = new ArrayList<String>();
 	    if (containsAnyOperator(criteria)) {
 		vars = getVariablesFromCriteria(criteria);
