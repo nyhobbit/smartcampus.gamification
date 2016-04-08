@@ -19,6 +19,8 @@ public class ChallengeFactory implements ChallengeFactoryInterface {
 	    return new BadgeCollectionCompletionChallenge(templateDir);
 	case RECOMMENDATION:
 	    return new RecommendationChallenge(templateDir);
+	case POINTSEARNED:
+		return new PointsEarnedChallenge(templateDir);
 	default:
 	    throw new UndefinedChallengeException("Unknown challenge type!"
 		    + chType.toString());

@@ -23,7 +23,7 @@ public class FactoryTest {
 	Challenge c = null;
 
 	// PERCENT Challenge building
-	HashMap<String, Object> params = new HashMap<String, Object>();
+	HashMap<String, Object> params;
 	try {
 	    c = chFactory.createChallenge(ChallengeType.PERCENT,
 		    "rules/templates");
@@ -108,5 +108,26 @@ public class FactoryTest {
 	Assert.assertTrue(c.getGeneratedRules() != null
 		&& !c.getGeneratedRules().equals(""));
 	System.out.println(c.getGeneratedRules() + "\n\n");
+  
+    
+    // POINTSEARNED Challenge building
+ 	try {
+ 	    c = chFactory.createChallenge(ChallengeType.POINTSEARNED,
+ 		    "rules/templates");
+ 	    params = new HashMap<String, Object>();
+ 	    params.put("target", new Long(100));
+ 	    params.put("bonus", new Integer(50));
+ 	    params.put("point_type", "green leaves");
+ 	    c.setTemplateParams(params);
+ 	    c.compileChallenge(testUserId);
+ 	} catch (UndefinedChallengeException uce) {
+ 	    uce.printStackTrace();
+ 	}
+ 	Assert.assertTrue("Challenge " + ChallengeType.POINTSEARNED + " created",
+ 		c != null);
+ 	Assert.assertTrue(c.getType().equals(ChallengeType.POINTSEARNED));
+ 	Assert.assertTrue(c.getGeneratedRules() != null
+ 		&& !c.getGeneratedRules().equals(""));
+ 	System.out.println(c.getGeneratedRules() + "\n\n");
     }
 }
