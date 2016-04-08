@@ -52,7 +52,7 @@ public class PointsEarnedChallenge extends Challenge {
 		customData.put("ch_" + this.chId + "_target", this.pointsTarget);
 
 		customData.put("ch_" + this.chId
-			+ "_points_earned_during_challenges", new Integer(0));
+			+ "_points_earned_during_challenges", new Long(0));
 	 }
 	
 	@Override
