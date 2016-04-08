@@ -29,6 +29,7 @@ public class ChallengesRulesGenerator {
 	    .getProperty("line.separator");
     private static final Logger logger = LogManager
 	    .getLogger(ChallengeRulesLoader.class);
+    private static final int challengeLimitNumber = 2;
 
     private StringBuffer buffer;
     private ChallengeFactoryInterface factory;
@@ -38,6 +39,7 @@ public class ChallengesRulesGenerator {
     private final String reportHeader = "PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;TRANSPORT_MODE;BASELINE_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID\n";
     private FileOutputStream fout;
     private FileOutputStream rout;
+    private Map<String, Integer> challengeMap;
 
     public ChallengesRulesGenerator(ChallengeFactoryInterface factory,
 	    String reportName) throws IOException {
@@ -49,6 +51,8 @@ public class ChallengesRulesGenerator {
 	rout = new FileOutputStream("generatedRules.drl");
 	// write header
 	IOUtils.write(reportHeader, fout);
+	// init challenge map
+	challengeMap = new HashMap<String, Integer>();
     }
 
     /**
@@ -73,31 +77,34 @@ public class ChallengesRulesGenerator {
 
 	// get right challenge
 	for (Content user : users) {
-	    Challenge c = factory
-		    .createChallenge(
-			    ChallengeType.valueOf(challengeSpec.getType()),
-			    templateDir);
-	    params = new HashMap<String, Object>();
-	    // TODO: con peppo, dobbiamo capire come le varie tipologie vanno ad
-	    // essere usate nei template
-	    if (challengeSpec.getTarget() instanceof Double) {
-		params.put("target", challengeSpec.getTarget());
-	    }
-	    params.put("mode", challengeSpec.getGoalType());
-	    params.put("bonus", challengeSpec.getBonus());
-	    params.put("point_type", challengeSpec.getPointType());
-	    params.put(
-		    "baseline",
-		    user.getCustomData().getAdditionalProperties()
-			    .get(challengeSpec.getBaselineVar()));
-	    c.setTemplateParams(params);
-	    c.compileChallenge(user.getPlayerId());
-	    buffer.append(c.getGeneratedRules());
+	    // create a challenge for user only under a specific limit
+	    if (getChallenges(user.getPlayerId()) < challengeLimitNumber) {
+		Challenge c = factory.createChallenge(
+			ChallengeType.valueOf(challengeSpec.getType()),
+			templateDir);
+		params = new HashMap<String, Object>();
+		if (challengeSpec.getTarget() instanceof Double) {
+		    params.put("target", challengeSpec.getTarget());
+		}
+		params.put("mode", challengeSpec.getGoalType());
+		params.put("bonus", challengeSpec.getBonus());
+		params.put("point_type", challengeSpec.getPointType());
+		params.put(
+			"baseline",
+			user.getCustomData().getAdditionalProperties()
+				.get(challengeSpec.getBaselineVar()));
+		c.setTemplateParams(params);
+		c.compileChallenge(user.getPlayerId());
+		buffer.append(c.getGeneratedRules());
 
-	    reportBuffer.append(user.getPlayerId() + ";"
-		    + challengeSpec.getName() + ";" + c.toString() + "\n");
-	    // save custom data for user for later use
-	    playerIdCustomData.put(user.getPlayerId(), c.getCustomData());
+		reportBuffer.append(user.getPlayerId() + ";"
+			+ challengeSpec.getName() + ";" + c.toString() + "\n");
+		// save custom data for user for later use
+		playerIdCustomData.put(user.getPlayerId(), c.getCustomData());
+
+		// increase challenge number for user
+		increaseChallenge(user.getPlayerId());
+	    }
 	}
 	// write report to file
 	IOUtils.write(reportBuffer.toString(), fout);
@@ -109,6 +116,21 @@ public class ChallengesRulesGenerator {
 	IOUtils.write(result, rout);
 
 	return result;
+    }
+
+    private int getChallenges(String playerId) {
+	if (!challengeMap.containsKey(playerId)) {
+	    return 0;
+	}
+	return challengeMap.get(playerId);
+    }
+
+    private void increaseChallenge(String playerId) {
+	if (!challengeMap.containsKey(playerId)) {
+	    challengeMap.put(playerId, 1);
+	} else {
+	    challengeMap.put(playerId, challengeMap.get(playerId) + 1);
+	}
     }
 
     public void closeStream() throws IOException {
