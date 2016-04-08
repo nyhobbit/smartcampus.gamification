@@ -77,4 +77,17 @@ public class PointsEarnedChallenge extends Challenge {
 	return;
     }
 
+    @Override
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
+	sb.append(this.type + ";");
+	sb.append(";");
+	sb.append(";");
+	sb.append(this.pointsTarget + ";");
+	sb.append(this.prize + ";");
+	sb.append(this.pointType + ";");
+	sb.append(this.chId);
+	return sb.toString();
+    }
+
 }
