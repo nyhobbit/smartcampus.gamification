@@ -94,7 +94,7 @@ public class FactoryTest {
 	    c = chFactory.createChallenge(ChallengeType.RECOMMENDATION,
 		    "rules/templates");
 	    params = new HashMap<String, Object>();
-	    params.put("recommendations", new Integer(10));
+	    params.put("target", new Integer(10));
 	    params.put("point_type", "green leaves");
 	    params.put("bonus", new Integer(50));
 	    c.setTemplateParams(params);

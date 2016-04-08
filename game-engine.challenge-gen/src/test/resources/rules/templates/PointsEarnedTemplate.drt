@@ -31,27 +31,11 @@ ch_point_type
 
 template PointsEarnedTemplate
 
-rule 'ch_@{ch_ID}_trace'
-no-loop
-when
-	$delta : PointDelta(this.pointType == '@{ch_point_type}')
-	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_points_earned_during_challenges'],
-		$success : this['ch_@{ch_ID}_success'] != true )
-	Player(id == '@{ch_player}') 
-then
-	Long points = $delta.getDelta();
-	Long gp = $counter != null ? (Long)$counter : 0l;
-	gp += points;
-	
-	$c.put("ch_@{ch_ID}_points_earned_during_challenges", gp);
-	log('ch_@{ch_ID} trace');
-	update($c);
-end
 
 rule 'ch_@{ch_ID}_check'
 when
 	Player(id == '@{ch_player}')
-	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this['ch_@{ch_ID}_points_earned_during_challenges'] >= this['ch_@{ch_ID}_target'], 
+	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this["gp_current"] >= this['ch_@{ch_ID}_target'], 
 		this['ch_@{ch_ID}_success'] == false)
 	$pc : PointConcept(name == '@{ch_point_type}')
 then
