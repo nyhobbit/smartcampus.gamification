@@ -4,8 +4,11 @@ Gamification Engine challenge generator create challenges (a set of drools rules
 
 ## Description
 
-Starting from a csv file that defines challenge types, gamification engine challenge generator get users from a game defined inside gamification engine and using challenges criterias, get matching users and create rules for them. 
-Generated rules in json file can be inserted into 
+Gamification Engine Challenge Generator is based on two tools:
+
+1. Challenge generator: creates a set of drools rules based on a challenge definition in csv format
+2. Challenge uploader: uplaod generated rules into [Gamification Engine](https://github.com/smartcommunitylab/smartcampus.gamification) 
+ 
 
 ## Prerequisites 
 
@@ -37,6 +40,13 @@ Different zips (with related dependencies) are created inside target
 
 ## Challenge generator
 
+This tool read challenge definition from csv file in input and using provided templates generate corresponding rules.
+Tool create two files:
+
+* generated-rules-report.csv : a summary of generated rules 
+* generatedRules.drl: generated rule
+* output.json: used from challenge uploader (see below)
+
 Launch using:
 
 ```
@@ -60,10 +70,12 @@ java -jar challengeGenerator.jar
 #### Example
 
 ```
-java -jar challengeGenerator-jar-with-dependencies.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input challengesRules.csv -templateDir rules\templates -output output.json
+java -jar challengeGenerator.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input BetaTestChallenges.csv -templateDir rules\templates -output output.json
 ``` 
 
 ## Challenge uploader
+
+Starting from output of challenge generator upload generated rules into [Gamification Engine](https://github.com/smartcommunitylab/smartcampus.gamification) 
 
 Launch using:
 

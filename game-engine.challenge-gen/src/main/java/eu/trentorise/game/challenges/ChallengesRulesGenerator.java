@@ -37,6 +37,7 @@ public class ChallengesRulesGenerator {
 
     private final String reportHeader = "PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;TRANSPORT_MODE;BASELINE_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID\n";
     private FileOutputStream fout;
+    private FileOutputStream rout;
 
     public ChallengesRulesGenerator(ChallengeFactoryInterface factory,
 	    String reportName) throws IOException {
@@ -45,6 +46,7 @@ public class ChallengesRulesGenerator {
 	this.factory = factory;
 	// prepare report output
 	fout = new FileOutputStream(reportName);
+	rout = new FileOutputStream("generatedRules.drl");
 	// write header
 	IOUtils.write(reportHeader, fout);
     }
@@ -102,6 +104,10 @@ public class ChallengesRulesGenerator {
 
 	// remove package declaration after first
 	String result = filterPackageDeclaration(buffer.toString());
+
+	// write generate rule to a file
+	IOUtils.write(result, rout);
+
 	return result;
     }
 
