@@ -35,7 +35,7 @@ public class ChallengesRulesGenerator {
     private Map<String, Map<String, Object>> playerIdCustomData;
     private StringBuffer reportBuffer;
 
-    private final String reportHeader = "PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;START_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID\n";
+    private final String reportHeader = "PLAYER;CHALLENGE_NAME;CHALLENGE_TYPE;TRANSPORT_MODE;BASELINE_VALUE;TARGET_VALUE;PRIZE;POINT_TYPE;CH_ID\n";
     private FileOutputStream fout;
 
     public ChallengesRulesGenerator(ChallengeFactoryInterface factory,

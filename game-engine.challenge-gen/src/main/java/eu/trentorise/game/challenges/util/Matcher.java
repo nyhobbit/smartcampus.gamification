@@ -38,15 +38,11 @@ public class Matcher {
     }
 
     private boolean challengeMatch(Content user) {
-	//if (challenge.getType().equals("PERCENT")) 
-		return percentMatch(user);
-	// return false;
-    }
-    
-
-    private boolean percentMatch(Content user) {
 	String criteria = challenge.getSelectionCriteria();
 	logger.debug("criteria to evaluate: " + criteria);
+	if (criteria.equalsIgnoreCase("true")) {
+	    return true;
+	}
 	if (isUserValid(user, criteria)) {
 	    List<String> vars = getVariablesFromCriteria(criteria);
 	    for (String var : vars) {
@@ -73,9 +69,7 @@ public class Matcher {
     private boolean isUserValid(Content user, String criteria) {
 	if (user != null && criteria != null && !criteria.isEmpty()
 		&& user.getCustomData() != null
-		&& user.getCustomData().getAdditionalProperties() != null
-		//&& !user.getCustomData().getAdditionalProperties().isEmpty()
-		) {
+		&& user.getCustomData().getAdditionalProperties() != null) {
 	    List<String> vars = new ArrayList<String>();
 	    if (containsAnyOperator(criteria)) {
 		vars = getVariablesFromCriteria(criteria);

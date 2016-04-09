@@ -79,4 +79,17 @@ public class TripNumberChallenge extends Challenge {
 	}
     }
 
+    @Override
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
+	sb.append(this.type + ";");
+	sb.append(this.mode + ";");
+	sb.append(";");
+	sb.append(this.nTrips + ";");
+	sb.append(this.prize + ";");
+	sb.append(this.pointType + ";");
+	sb.append(this.chId);
+	return sb.toString();
+    }
+
 }

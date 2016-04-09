@@ -87,6 +87,7 @@ public class PercentMobilityChallenge extends Challenge {
     public String toString() {
 	StringBuffer sb = new StringBuffer();
 	sb.append(this.type + ";");
+	sb.append(this.mode + ";");
 	sb.append(this.baseline + ";");
 	sb.append(this.baseline * (1 + this.percent) + ";");
 	sb.append(this.prize + ";");

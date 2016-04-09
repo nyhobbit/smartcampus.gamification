@@ -45,9 +45,9 @@ public class RecommendationChallenge extends Challenge {
 	this.prize = (Integer) tp.get("bonus");
 	customData.put("ch_" + this.chId + "_bonus", this.prize);
 
-	if (!tp.containsKey("recommendations"))
-	    throw new UndefinedChallengeException("undefined challenge!");
-	this.recommendations = ((Integer) tp.get("recommendations")).intValue();
+	if (!tp.containsKey("target"))
+	    throw new UndefinedChallengeException("undefined challenge target!");
+	this.recommendations = ((Double) tp.get("target")).intValue();
 	customData.put("ch_" + this.chId + "_target", this.recommendations);
 
 	customData.put("ch_" + this.chId
@@ -69,6 +69,19 @@ public class RecommendationChallenge extends Challenge {
 		    "challenge cannot be compiled for user " + playerId);
 	}
 	return;
+    }
+
+    @Override
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
+	sb.append(this.type + ";");
+	sb.append(";");
+	sb.append(";");
+	sb.append(this.recommendations + ";");
+	sb.append(this.prize + ";");
+	sb.append(this.pointType + ";");
+	sb.append(this.chId);
+	return sb.toString();
     }
 
 }
