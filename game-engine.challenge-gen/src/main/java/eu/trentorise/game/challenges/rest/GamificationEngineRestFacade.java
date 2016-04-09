@@ -76,8 +76,7 @@ public class GamificationEngineRestFacade {
 	// build endpoint
 	// with htt p basic authentication
 	HttpAuthenticationFeature feature = HttpAuthenticationFeature
-		.basicBuilder().nonPreemptive().credentials(username, password)
-		.build();
+		.basicBuilder().credentials(username, password).build();
 	Client client = ClientBuilder.newClient();
 	client.register(feature);
 	target = client.target(endpoint);

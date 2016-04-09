@@ -3,3 +3,5 @@
 .classpath
 .project
 .DS_Store
+/generated-rules-report.csv
+/generatedRules.drl

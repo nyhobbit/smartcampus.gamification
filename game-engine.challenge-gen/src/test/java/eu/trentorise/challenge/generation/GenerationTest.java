@@ -4,6 +4,8 @@ import static eu.trentorise.challenge.PropertiesUtil.CONTEXT;
 import static eu.trentorise.challenge.PropertiesUtil.GAMEID;
 import static eu.trentorise.challenge.PropertiesUtil.HOST;
 import static eu.trentorise.challenge.PropertiesUtil.INSERT_CONTEXT;
+import static eu.trentorise.challenge.PropertiesUtil.PASSWORD;
+import static eu.trentorise.challenge.PropertiesUtil.USERNAME;
 import static eu.trentorise.challenge.PropertiesUtil.get;
 import static org.junit.Assert.assertTrue;
 
@@ -38,9 +40,10 @@ public class GenerationTest {
 
     @Before
     public void setup() {
-	facade = new GamificationEngineRestFacade(get(HOST) + get(CONTEXT));
+	facade = new GamificationEngineRestFacade(get(HOST) + get(CONTEXT),
+		get(USERNAME), get(PASSWORD));
 	insertFacade = new GamificationEngineRestFacade(get(HOST)
-		+ get(INSERT_CONTEXT));
+		+ get(INSERT_CONTEXT), get(USERNAME), get(PASSWORD));
     }
 
     @Test
