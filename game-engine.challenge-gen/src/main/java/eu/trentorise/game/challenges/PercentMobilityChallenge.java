@@ -49,7 +49,7 @@ public class PercentMobilityChallenge extends Challenge {
 	super.setCustomData(tp);
 
 	customData.put(Constants.CH + this.chId + "_mode", this.mode);
-	customData.put(Constants.CH + this.chId + "point_type", this.pointType);
+	customData.put(Constants.CH + this.chId + "_point_type", this.pointType);
 
 	if (!tp.containsKey("target"))
 	    throw new UndefinedChallengeException(

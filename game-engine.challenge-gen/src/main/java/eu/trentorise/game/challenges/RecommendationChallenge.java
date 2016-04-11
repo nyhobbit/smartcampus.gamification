@@ -38,7 +38,7 @@ public class RecommendationChallenge extends Challenge {
 	    throws UndefinedChallengeException {
 	super.setCustomData(tp);
 
-	customData.put("ch_" + this.chId + "point_type", this.pointType);
+	customData.put("ch_" + this.chId + "_point_type", this.pointType);
 
 	if (!tp.containsKey("bonus"))
 	    throw new UndefinedChallengeException("undefined challenge!");

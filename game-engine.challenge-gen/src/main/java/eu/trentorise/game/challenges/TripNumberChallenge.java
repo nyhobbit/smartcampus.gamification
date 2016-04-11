@@ -48,7 +48,7 @@ public class TripNumberChallenge extends Challenge {
 	super.setCustomData(tp);
 
 	customData.put("ch_" + this.chId + "_mode", this.mode);
-	customData.put("ch_" + this.chId + "point_type", this.pointType);
+	customData.put("ch_" + this.chId + "_point_type", this.pointType);
 
 	if (!tp.containsKey("target"))
 	    throw new UndefinedChallengeException(
