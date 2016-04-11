@@ -56,18 +56,20 @@ java -jar challengeGenerator.jar
 ### Command line arguments
 
 ```
- usage: challengeGeneratorTool
-
- -host <host> -gameId <gameId> -input <input csv file> -template <template directory> [-output output file]
+usage: challengeGeneratorTool -host <host> -gameId <gameId> -input <input csv file> -template <template directory> [-output output file]
  -gameId        uuid for gamification engine
  -help          display this help
  -host          gamification engine host
  -input         challenge definition as csv file
  -output        generated file name, default challenge.json
+ -password      password for gamification engine
  -templateDir   challenges templates
+ -username      username for gamification engine
 ```
 
 #### Example
+
+In this example challenge generator interact with gamification engine without username and passowrd
 
 ```
 java -jar challengeGenerator.jar -host http://localhost:8080/gamification/ -gameId 56e7bf3b570ac89331c37262 -input BetaTestChallenges.csv -templateDir rules\templates -output output.json
@@ -86,12 +88,13 @@ java -jar challengeUploader.jar
 ### Command line arguments:
 
 ```
-usage: challengeUploader
--host <host> -gameId <gameId> -input <input json file>
- -gameId   uuid for gamification engine
- -help     display this help
- -host     gamification engine host
- -input    rules to upload in json format
+usage: challengeUploader -host <host> -gameId <gameId> -input <input json file> 
+ -gameId     uuid for gamification engine
+ -help       display this help
+ -host       gamification engine host
+ -input      rules to upload in json format
+ -password   password for gamification engine
+ -username   username for gamification engine
 ```
 
 #### Example

@@ -107,7 +107,7 @@ public class ChallengeGeneratorTool {
 	helpFormatter
 		.printHelp(
 			"challengeGeneratorTool",
-			"-host <host> -gameId <gameId> -input <input csv file> -template <template directory> [-output output file]",
+			"-host <host> -gameId <gameId> -input <input csv file> -template <template directory> [-output output file] [-username -password]",
 			options, "");
     }
 

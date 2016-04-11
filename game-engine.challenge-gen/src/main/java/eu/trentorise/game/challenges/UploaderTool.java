@@ -88,9 +88,11 @@ public class UploaderTool {
     }
 
     private static void printHelp() {
-	helpFormatter.printHelp("challengeUploader",
-		"-host <host> -gameId <gameId> -input <input json file> ",
-		options, "");
+	helpFormatter
+		.printHelp(
+			"challengeUploader",
+			"-host <host> -gameId <gameId> -input <input json file> [-username -password ] ",
+			options, "");
     }
 
     private static void upload(String host, String gameId, String input,
