@@ -73,7 +73,7 @@ public class ChallengesRulesGenerator {
 	buffer.append("/** " + challengeSpec.getType() + " "
 		+ challengeSpec.getTarget().toString() + " **/\n");
 	reportBuffer = new StringBuffer();
-
+	playerIdCustomData.clear();
 	// get right challenge
 	for (Content user : users) {
 	    // create a challenge for user only under a specific limit
