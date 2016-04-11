@@ -175,6 +175,11 @@ public class ChallengeGeneratorTool {
 	for (ChallengeRuleRow challengeSpec : result.getChallenges()) {
 	    Matcher matcher = new Matcher(challengeSpec);
 	    List<Content> filteredUsers = matcher.match(users);
+	    if (filteredUsers.isEmpty()) {
+		System.out.println("Warning: no users for challenge : "
+			+ challengeSpec.getName());
+		continue;
+	    }
 	    String res;
 	    try {
 		res = crg.generateRules(challengeSpec, filteredUsers,
