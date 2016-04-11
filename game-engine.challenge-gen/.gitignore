@@ -5,3 +5,4 @@
 .DS_Store
 /generated-rules-report.csv
 /generatedRules.drl
+/output.json
