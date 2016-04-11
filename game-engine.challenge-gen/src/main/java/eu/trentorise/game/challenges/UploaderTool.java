@@ -57,6 +57,8 @@ public class UploaderTool {
 	String host = "";
 	String gameId = "";
 	String input = "";
+	String username = "";
+	String password = "";
 	if (cmd.hasOption("host")) {
 	    host = cmd.getArgList().get(0);
 	} else {
@@ -75,8 +77,14 @@ public class UploaderTool {
 	    printHelp();
 	    return;
 	}
+	if (cmd.hasOption("username")) {
+	    username = cmd.getArgList().get(3);
+	}
+	if (cmd.hasOption("password")) {
+	    password = cmd.getArgList().get(4);
+	}
 	// call generation
-	upload(host, gameId, input);
+	upload(host, gameId, input, username, password);
     }
 
     private static void printHelp() {
@@ -85,13 +93,20 @@ public class UploaderTool {
 		options, "");
     }
 
-    private static void upload(String host, String gameId, String input) {
+    private static void upload(String host, String gameId, String input,
+	    String username, String password) {
 	if (input == null) {
 	    System.err.println("Input file cannot be null");
 	    return;
 	}
-	GamificationEngineRestFacade insertFacade = new GamificationEngineRestFacade(
-		host + "console/");
+	GamificationEngineRestFacade insertFacade;
+	if (username != null && password != null && !username.isEmpty()
+		&& !password.isEmpty()) {
+	    insertFacade = new GamificationEngineRestFacade(host + "console/",
+		    username, password);
+	} else {
+	    insertFacade = new GamificationEngineRestFacade(host + "console/");
+	}
 	// read input file
 	ObjectMapper mapper = new ObjectMapper();
 	List<RuleDto> rules = null;
@@ -145,6 +160,10 @@ public class UploaderTool {
 		.desc("uuid for gamification engine").required().build());
 	options.addOption(Option.builder("input")
 		.desc("rules to upload in json format").required().build());
+	options.addOption(Option.builder("username")
+		.desc("username for gamification engine").build());
+	options.addOption(Option.builder("password")
+		.desc("password for gamification engine").build());
 	helpFormatter = new HelpFormatter();
     }
 

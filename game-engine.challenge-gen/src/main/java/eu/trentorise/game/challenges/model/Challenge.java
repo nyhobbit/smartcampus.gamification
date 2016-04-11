@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -20,6 +21,10 @@ import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
 
 public abstract class Challenge {
 
+    // change constant in order to change number of days in the challenge
+    // (please see hours, minutes and seconds!)
+    private static final int CHALLENGE_DURATION = 3;
+
     protected String drlName;
 
     protected int difficulty = 0;
@@ -33,6 +38,8 @@ public abstract class Challenge {
     protected String generatedRules = "";
 
     private String templateDir;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+    private static boolean printedDates = false;
 
     /**
      * Create a new challenge using given template
@@ -58,11 +65,24 @@ public abstract class Challenge {
 	Calendar calendar = new GregorianCalendar();
 	calendar.setTime(new Date());
 	calendar.add(Calendar.DAY_OF_MONTH, 1); // tomorrow
+	calendar.set(Calendar.HOUR_OF_DAY, 0);
+	calendar.set(Calendar.MINUTE, 0);
+	calendar.set(Calendar.SECOND, 1);
+	if (!printedDates) {
+	    System.out.println("Challenge starting time: "
+		    + sdf.format(calendar.getTime()));
+	}
 	customData.put(Constants.CH + this.chId + Constants.START_CHTS,
 		calendar.getTimeInMillis());
-	calendar.add(Calendar.DAY_OF_MONTH, 7); // tomorrow + 1 week
+	calendar.add(Calendar.DAY_OF_MONTH, CHALLENGE_DURATION); // tomorrow + 1
+								 // week
 	customData.put(Constants.CH + this.chId + Constants.END_CHTS,
 		calendar.getTimeInMillis());
+	if (!printedDates) {
+	    System.out.println("Challenge end time: "
+		    + sdf.format(calendar.getTime()));
+	}
+	printedDates = true;
 	customData.put(Constants.CH + this.chId + Constants.SUCCESS, false);
     }
 

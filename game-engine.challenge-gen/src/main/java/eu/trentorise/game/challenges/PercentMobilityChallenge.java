@@ -1,6 +1,7 @@
 package eu.trentorise.game.challenges;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class PercentMobilityChallenge extends Challenge {
     private Double baseline = 0.0;
     private Integer prize = null;
     private String pointType = null;
+    private DecimalFormat df = new DecimalFormat("#.00");
 
     public PercentMobilityChallenge(String templateDir) {
 	super(templateDir, "MobilityPercentImproveTemplate.drt");
@@ -56,8 +58,10 @@ public class PercentMobilityChallenge extends Challenge {
 	if (!tp.containsKey("baseline"))
 	    throw new UndefinedChallengeException("undefined challenge!");
 	this.baseline = ((Double) tp.get("baseline")).doubleValue();
-	customData.put(Constants.CH + this.chId + "_target", this.baseline
-		* (1.0 + this.percent));
+	// round double
+	Double value = this.baseline * (1.0 + this.percent);
+	value = Double.valueOf(Math.round(value));
+	customData.put(Constants.CH + this.chId + "_target", value);
 
 	if (!tp.containsKey("bonus"))
 	    throw new UndefinedChallengeException("undefined challenge!");
@@ -88,8 +92,11 @@ public class PercentMobilityChallenge extends Challenge {
 	StringBuffer sb = new StringBuffer();
 	sb.append(this.type + ";");
 	sb.append(this.mode + ";");
-	sb.append(this.baseline + ";");
-	sb.append(this.baseline * (1 + this.percent) + ";");
+	String baseline = df.format(this.baseline);
+	sb.append(baseline + ";");
+	Double value = this.baseline * (1.0 + this.percent);
+	value = Double.valueOf(Math.round(value));
+	sb.append(value + ";");
 	sb.append(this.prize + ";");
 	sb.append(this.pointType + ";");
 	sb.append(this.chId);

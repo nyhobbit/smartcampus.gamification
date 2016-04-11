@@ -64,6 +64,8 @@ public class ChallengeGeneratorTool {
 	String input = "";
 	String templateDir = "";
 	String output = "challenge.json";
+	String username = "";
+	String password = "";
 	if (cmd.hasOption("host")) {
 	    host = cmd.getArgList().get(0);
 	} else {
@@ -88,12 +90,17 @@ public class ChallengeGeneratorTool {
 	    printHelp();
 	    return;
 	}
-
 	if (cmd.hasOption("output")) {
 	    output = cmd.getArgList().get(4);
 	}
+	if (cmd.hasOption("username")) {
+	    username = cmd.getArgList().get(5);
+	}
+	if (cmd.hasOption("password")) {
+	    password = cmd.getArgList().get(6);
+	}
 	// call generation
-	generate(host, gameId, input, templateDir, output);
+	generate(host, gameId, input, templateDir, output, username, password);
     }
 
     private static void printHelp() {
@@ -105,7 +112,7 @@ public class ChallengeGeneratorTool {
     }
 
     private static void generate(String host, String gameId, String input,
-	    String templateDir, String output) {
+	    String templateDir, String output, String username, String password) {
 	// load
 	ChallengeRules result;
 	try {
@@ -120,8 +127,15 @@ public class ChallengeGeneratorTool {
 	    return;
 	}
 	// get users from gamification engine
-	GamificationEngineRestFacade facade = new GamificationEngineRestFacade(
-		host + "gengine/");
+	GamificationEngineRestFacade facade;
+	if (username != null && password != null && !username.isEmpty()
+		&& !password.isEmpty()) {
+	    facade = new GamificationEngineRestFacade(host + "gengine/",
+		    username, password);
+	} else {
+	    facade = new GamificationEngineRestFacade(host + "gengine/");
+
+	}
 	System.out.println("Contacting gamification engine on host " + host);
 	List<Content> users = null;
 
@@ -223,6 +237,10 @@ public class ChallengeGeneratorTool {
 		.desc("challenges templates").build());
 	options.addOption(Option.builder("output")
 		.desc("generated file name, default challenge.json").build());
+	options.addOption(Option.builder("username")
+		.desc("username for gamification engine").build());
+	options.addOption(Option.builder("password")
+		.desc("password for gamification engine").build());
 	helpFormatter = new HelpFormatter();
     }
 
