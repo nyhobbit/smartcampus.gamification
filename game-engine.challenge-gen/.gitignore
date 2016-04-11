@@ -6,3 +6,6 @@
 /generated-rules-report.csv
 /generatedRules.drl
 /output.json
+/report.csv
+/gamification.log
+/gamification.perf.log
