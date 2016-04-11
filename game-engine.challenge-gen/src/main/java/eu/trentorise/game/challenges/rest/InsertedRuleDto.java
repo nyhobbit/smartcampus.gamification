@@ -1,16 +1,22 @@
 package eu.trentorise.game.challenges.rest;
 
-import java.util.Map;
-
 /**
  * Simple Dto mean to be used for inserting rules
  */
-public class RuleDto {
+public class InsertedRuleDto {
 
     private String id;
     private String content;
     private String name;
-    private Map<String, Map<String, Object>> customData;
+
+    public InsertedRuleDto() {
+    }
+
+    public InsertedRuleDto(RuleDto rule) {
+	this.id = rule.getId();
+	this.content = rule.getContent();
+	this.name = rule.getName();
+    }
 
     public String getId() {
 	return id;
@@ -34,14 +40,6 @@ public class RuleDto {
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    public void setCustomData(Map<String, Map<String, Object>> customData) {
-	this.customData = customData;
-    }
-
-    public Map<String, Map<String, Object>> getCustomData() {
-	return customData;
     }
 
 }

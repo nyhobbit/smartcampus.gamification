@@ -138,21 +138,22 @@ public class GamificationEngineRestFacade {
      * 
      * @param gameId
      *            unique id for game
-     * @param rule
+     * @param toInsert
      *            to insert
      * @return {@link RuleDto} instance, null if error
      */
-    public RuleDto insertGameRule(String gameId, RuleDto rule) {
-	if (gameId == null || rule == null) {
+    public InsertedRuleDto insertGameRule(String gameId,
+	    InsertedRuleDto toInsert) {
+	if (gameId == null || toInsert == null) {
 	    throw new IllegalArgumentException("input cannot be null");
 	}
 	WebTarget target = getTarget().path(GAME).path(gameId).path(RULE)
 		.path(DB);
-	Response response = target.request().post(Entity.json(rule));
+	Response response = target.request().post(Entity.json(toInsert));
 
 	if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 	    logger.debug("response code: " + response.getStatus());
-	    return response.readEntity(RuleDto.class);
+	    return response.readEntity(InsertedRuleDto.class);
 	}
 	logger.error("response code: " + response.getStatus() + ", reason: "
 		+ response.getStatusInfo());

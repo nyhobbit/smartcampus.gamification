@@ -24,7 +24,7 @@ import eu.trentorise.game.challenges.ChallengesRulesGenerator;
 import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
 import eu.trentorise.game.challenges.rest.Content;
 import eu.trentorise.game.challenges.rest.GamificationEngineRestFacade;
-import eu.trentorise.game.challenges.rest.RuleDto;
+import eu.trentorise.game.challenges.rest.InsertedRuleDto;
 import eu.trentorise.game.challenges.util.ChallengeRuleRow;
 import eu.trentorise.game.challenges.util.ChallengeRules;
 import eu.trentorise.game.challenges.util.ChallengeRulesLoader;
@@ -139,12 +139,12 @@ public class GenerationTest {
 	    }
 
 	    // define rule
-	    RuleDto rule = new RuleDto();
+	    InsertedRuleDto rule = new InsertedRuleDto();
 	    rule.setContent(res);
 	    rule.setName(challengeSpec.getName());
 	    // insert rule
-	    RuleDto insertedRule = insertFacade.insertGameRule(get(GAMEID),
-		    rule);
+	    InsertedRuleDto insertedRule = insertFacade.insertGameRule(
+		    get(GAMEID), rule);
 	    if (insertedRule != null) {
 		logger.debug("Inserted rule ");
 		assertTrue(!insertedRule.getId().isEmpty());

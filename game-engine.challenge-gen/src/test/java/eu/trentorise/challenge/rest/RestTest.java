@@ -22,7 +22,7 @@ import org.junit.Test;
 import eu.trentorise.game.challenges.rest.Content;
 import eu.trentorise.game.challenges.rest.ExecutionDataDTO;
 import eu.trentorise.game.challenges.rest.GamificationEngineRestFacade;
-import eu.trentorise.game.challenges.rest.RuleDto;
+import eu.trentorise.game.challenges.rest.InsertedRuleDto;
 import eu.trentorise.game.challenges.util.ConverterUtil;
 import eu.trentorise.game.challenges.util.JourneyData;
 
@@ -48,11 +48,11 @@ public class RestTest {
     @Test
     public void gameInsertRuleTest() {
 	// define rule
-	RuleDto rule = new RuleDto();
+	InsertedRuleDto rule = new InsertedRuleDto();
 	rule.setContent("/* */");
 	rule.setName("sampleRule");
 	// insert rule
-	RuleDto result = insertFacade.insertGameRule(get(GAMEID), rule);
+	InsertedRuleDto result = insertFacade.insertGameRule(get(GAMEID), rule);
 	assertTrue(!result.getId().isEmpty());
 	// delete inserted rule
 	boolean res = insertFacade.deleteGameRule(get(GAMEID), result.getId());
@@ -110,6 +110,14 @@ public class RestTest {
 	// result = insertFacade.updateChallengeCustomData(get(GAMEID), "178",
 	// customData);
 	// assertTrue(result);
+    }
+
+    @Test
+    public void stressTestRead() {
+	int n = 1000;
+	for (int i = 0; i < n; i++) {
+	    List<Content> result = facade.readGameState(get(GAMEID));
+	}
     }
 
 }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import eu.trentorise.game.challenges.api.Constants;
 import eu.trentorise.game.challenges.rest.GamificationEngineRestFacade;
+import eu.trentorise.game.challenges.rest.InsertedRuleDto;
 import eu.trentorise.game.challenges.rest.RuleDto;
 
 /**
@@ -127,7 +128,16 @@ public class UploaderTool {
 	buffer.append("CHALLENGE_NAME;CHALLENGE_UUID;RULE_TEXT\n");
 	System.out.println("Read rules " + rules.size());
 	for (RuleDto rule : rules) {
-	    RuleDto insertedRule = insertFacade.insertGameRule(gameId, rule);
+	    // update custom data for every user related to genrate rule
+	    for (String userId : rule.getCustomData().keySet()) {
+		insertFacade.updateChallengeCustomData(gameId, userId, rule
+			.getCustomData().get(userId));
+	    }
+
+	    // insert rule
+	    InsertedRuleDto toInsert = new InsertedRuleDto(rule);
+	    InsertedRuleDto insertedRule = insertFacade.insertGameRule(gameId,
+		    toInsert);
 	    if (insertedRule != null) {
 		String ruleId = StringUtils.removeStart(insertedRule.getId(),
 			Constants.RULE_PREFIX);

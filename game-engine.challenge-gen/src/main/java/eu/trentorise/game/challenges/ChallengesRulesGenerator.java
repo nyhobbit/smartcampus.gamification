@@ -72,7 +72,6 @@ public class ChallengesRulesGenerator {
 	buffer = new StringBuffer();
 	buffer.append("/** " + challengeSpec.getType() + " "
 		+ challengeSpec.getTarget().toString() + " **/\n");
-
 	reportBuffer = new StringBuffer();
 
 	// get right challenge
