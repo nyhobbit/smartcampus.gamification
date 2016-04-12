@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import eu.trentorise.game.challenges.api.Constants;
 import eu.trentorise.game.challenges.exception.UndefinedChallengeException;
 import eu.trentorise.game.challenges.rest.Content;
 import eu.trentorise.game.challenges.rest.GamificationEngineRestFacade;
@@ -148,6 +149,11 @@ public class ChallengeGeneratorTool {
 		    + " for gameId " + gameId);
 	    return;
 	}
+	if (users == null || users.isEmpty()) {
+	    System.err.println("Warning: no users for game " + gameId);
+	    return;
+	}
+
 	System.out
 		.println("Reading game from gamification engine game state for gameId: "
 			+ gameId);
@@ -201,6 +207,7 @@ public class ChallengeGeneratorTool {
 	    rule.setName(challengeSpec.getName());
 	    Map<String, Map<String, Object>> cs = new HashMap<String, Map<String, Object>>();
 	    cs.putAll(crg.getPlayerIdCustomData());
+	    cs = resetAllGamesCounter(cs);
 	    rule.setCustomData(cs);
 	    toWrite.add(rule);
 	}
@@ -231,6 +238,18 @@ public class ChallengeGeneratorTool {
 	System.out.println("Written output file " + output);
 	System.out.println("Written report file generated-rules-report.csv");
 
+    }
+
+    private static Map<String, Map<String, Object>> resetAllGamesCounter(
+	    Map<String, Map<String, Object>> cs) {
+	for (String userId : cs.keySet()) {
+	    Map<String, Object> customData = cs.get(userId);
+	    for (int i = 0; i < Constants.COUNTERS.length; i++) {
+		customData.put(Constants.COUNTERS[i], null);
+	    }
+	    cs.put(userId, customData);
+	}
+	return cs;
     }
 
     private static void init() {

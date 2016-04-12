@@ -20,4 +20,12 @@ public final class Constants {
     public static final String CH_POINT_TYPE = "ch_point_type";
     public static final String RULE_PREFIX = "db://";
 
+    // counters for rules
+    public static final String[] COUNTERS = { "gp_current",
+	    "zero_impact_trips_past", "walk_km_past", "walk_trips_past",
+	    "bike_km_past", "bike_trips_past", "bikesharing_km_past",
+	    "bikesharing_trips_past", "bus_km_past", "bus_trips_past",
+	    "train_km_past", "train_trips_past", "car_km_past",
+	    "car_trips_past", "recommendations" };
+
 }
