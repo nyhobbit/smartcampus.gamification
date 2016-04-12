@@ -110,6 +110,8 @@ public class UploaderTool {
 	} else {
 	    insertFacade = new GamificationEngineRestFacade(host + "console/");
 	}
+	System.out.println("Uploading on host " + host + " for gameId "
+		+ gameId + " for file " + input);
 	// read input file
 	ObjectMapper mapper = new ObjectMapper();
 	List<RuleDto> rules = null;
@@ -150,6 +152,7 @@ public class UploaderTool {
 	    } else {
 		System.err.println("Error in uploaded rule " + rule.getName());
 	    }
+	    System.out.println();
 	}
 	try {
 	    IOUtils.write(buffer, new FileOutputStream("report.csv"));
