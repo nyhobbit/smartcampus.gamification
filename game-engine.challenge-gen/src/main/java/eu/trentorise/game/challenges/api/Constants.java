@@ -26,6 +26,6 @@ public final class Constants {
 	    "bike_km_past", "bike_trips_past", "bikesharing_km_past",
 	    "bikesharing_trips_past", "bus_km_past", "bus_trips_past",
 	    "train_km_past", "train_trips_past", "car_km_past",
-	    "car_trips_past", "recommendations" };
+	    "car_trips_past" };
 
 }
