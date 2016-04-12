@@ -35,7 +35,7 @@ template GameRecommendationTemplate
 rule 'ch_@{ch_ID}_trace'
 no-loop
 when
-	Action(id == 'app_sent_recommendation')
+	Action(id == 'app_sent_recommandation')
 	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_recommendations_sent_during_challenges'],
 		$success : this['ch_@{ch_ID}_success'] != true )
 	Player(id == '@{ch_player}') 
