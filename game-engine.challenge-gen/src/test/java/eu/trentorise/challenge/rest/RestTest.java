@@ -112,11 +112,14 @@ public class RestTest {
 	// assertTrue(result);
     }
 
+    // For stress test, first configure perf4j in game-engine.core, then see
+    // resulting log
     @Test
     public void stressTestRead() {
 	int n = 1000;
 	for (int i = 0; i < n; i++) {
 	    List<Content> result = facade.readGameState(get(GAMEID));
+	    assertTrue(!result.isEmpty());
 	}
     }
 
