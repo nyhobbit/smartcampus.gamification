@@ -35,11 +35,10 @@ CustomData to have   []=used by
 template MobilityPercentImproveTemplate
 
 rule "ch_@{ch_ID}_trace"
-no-loop
+lock-on-active
 when 
 	InputData($distance: data["@{ch_mode}"] != null)	
-	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_Km_traveled_during_challenge'], 
-		$success : this['ch_@{ch_ID}_success'] != true)
+	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_Km_traveled_during_challenge']	)
 	Player(id == "@{ch_player}") 
 then
 	if($counter == null) {

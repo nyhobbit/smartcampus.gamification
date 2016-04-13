@@ -35,11 +35,10 @@ template TravelModeTemplate
 
 rule "ch_@{ch_ID}_trace"
 /* Player @{ch_player}: fai almeno viaggi in @{ch_mode} e vinci @{ch_point_type} */
-no-loop
+lock-on-active
 when 
 	InputData($distance : data['@{ch_mode}']!=null, $distance > @{ch_mode}_try_min)
-	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_counter'],
-		$success : this['ch_@{ch_ID}_success'] != true )
+	$c: CustomData($now: System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_counter'])
 	$pc : PointConcept(name == "@{ch_point_type}")
 	Player(id == "@{ch_player}") 
 then
