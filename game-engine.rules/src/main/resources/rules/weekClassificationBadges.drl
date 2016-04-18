@@ -8,6 +8,7 @@ GREEN WEEK CLASSIFICATION
   
 *************************************************************************** */
 rule "1st of the week"
+no-loop
 	salience -1000
 when
     Classification( name == 'week classification green', position == 1)
@@ -28,6 +29,7 @@ then
 end
 
 rule "2nd of the week"
+no-loop
 	salience -1000
 when
     Classification( name == 'week classification green', position == 2)
@@ -48,6 +50,7 @@ then
 end
 
 rule "3rd of the week"
+no-loop
 	salience -1000
 when
     Classification( name == 'week classification green', position == 3)

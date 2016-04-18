@@ -68,27 +68,6 @@ public class FactoryTest {
 		&& !c.getGeneratedRules().equals(""));
 	System.out.println(c.getGeneratedRules() + "\n\n");
 
-	// BADGE COLLECTION COMPLETION Challenge building
-	try {
-	    c = chFactory.createChallenge(ChallengeType.BADGECOLLECTION,
-		    "rules/templates");
-	    params = new HashMap<String, Object>();
-	    params.put("badge", "badge_foo");
-	    params.put("badge_collection", "green leaves");
-	    params.put("bonus", new Integer(50));
-	    params.put("point_type", "green leaves");
-	    c.setTemplateParams(params);
-	    c.compileChallenge(testUserId);
-	} catch (UndefinedChallengeException uce) {
-	    uce.printStackTrace();
-	}
-	Assert.assertTrue("Challenge " + ChallengeType.BADGECOLLECTION
-		+ " created", c != null);
-	Assert.assertTrue(c.getType().equals(ChallengeType.BADGECOLLECTION));
-	Assert.assertTrue(c.getGeneratedRules() != null
-		&& !c.getGeneratedRules().equals(""));
-	System.out.println(c.getGeneratedRules() + "\n\n");
-
 	// GAME RECOMMENDATION Challenge building
 	try {
 	    c = chFactory.createChallenge(ChallengeType.RECOMMENDATION,
@@ -135,7 +114,7 @@ public class FactoryTest {
     	c = chFactory.createChallenge(ChallengeType.ZEROIMPACT,
     		"rules/templates");
     	params = new HashMap<String, Object>();
-  	    params.put("target", new Integer(10));
+  	    params.put("target", new Long(10));
   	    params.put("bonus", new Integer(50));
   	    params.put("point_type", "green leaves");
   	    c.setTemplateParams(params);
@@ -149,5 +128,48 @@ public class FactoryTest {
     Assert.assertTrue(c.getGeneratedRules() != null
      		&& !c.getGeneratedRules().equals(""));
     System.out.println(c.getGeneratedRules() + "\n\n");
-    }	    
+  	
+    
+ // NEXTBADGE Challenge building
+    try { 
+    	c = chFactory.createChallenge(ChallengeType.NEXTBADGE,
+    		"rules/templates");
+    	params = new HashMap<String, Object>();
+  	    params.put("target", new Long(1));
+  	    params.put("bonus", new Integer(50));
+  	    params.put("point_type", "green leaves");
+  	    params.put("badge_collection", "green leaves");
+  	    c.setTemplateParams(params);
+  	    c.compileChallenge(testUserId);
+    } catch (UndefinedChallengeException uce) {
+ 	    uce.printStackTrace();
+ 	}
+    Assert.assertTrue("Challenge " + ChallengeType.NEXTBADGE + " created",
+     		c != null);
+    Assert.assertTrue(c.getType().equals(ChallengeType.NEXTBADGE));
+    Assert.assertTrue(c.getGeneratedRules() != null
+     		&& !c.getGeneratedRules().equals(""));
+    System.out.println(c.getGeneratedRules() + "\n\n");
+    
+	// BADGE COLLECTION COMPLETION Challenge building
+	try {
+	    c = chFactory.createChallenge(ChallengeType.BADGECOLLECTION,
+		    "rules/templates");
+	    params = new HashMap<String, Object>();
+	    params.put("badge_collection", "park_and_ride_pioneer");
+	    params.put("bonus", new Integer(45));
+	    params.put("point_type", "green leaves");
+	    c.setTemplateParams(params);
+	    c.compileChallenge(testUserId);
+	} catch (UndefinedChallengeException uce) {
+	    uce.printStackTrace();
+	}
+	Assert.assertTrue("Challenge " + ChallengeType.BADGECOLLECTION
+		+ " created", c != null);
+	Assert.assertTrue(c.getType().equals(ChallengeType.BADGECOLLECTION));
+	Assert.assertTrue(c.getGeneratedRules() != null
+		&& !c.getGeneratedRules().equals(""));
+	System.out.println(c.getGeneratedRules() + "\n\n");
+
+    }	
 }

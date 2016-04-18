@@ -22,16 +22,17 @@ public class ZeroImpactChallenge extends Challenge {
     @Override
     public void compileChallenge(String playerId)
 	    throws UndefinedChallengeException {
-	if (nTrips <= 0 || prize == null)
-	    throw new UndefinedChallengeException("undefined challenge!");
-
-	templateParams.put("ch_player", playerId);
-	try {
-	    generatedRules += generateRules();
-	} catch (IOException ioe) {
-	    throw new UndefinedChallengeException(
-		    "challenge cannot be compiled for user " + playerId);
-	}
+		if (nTrips <= 0 || prize == null)
+		    throw new UndefinedChallengeException("undefined challenge!");
+	
+		templateParams.put("ch_player", playerId);
+		try {
+		    generatedRules += generateRules();
+		} catch (IOException ioe) {
+		    throw new UndefinedChallengeException(
+			    "challenge cannot be compiled for user " + playerId);
+		}
+	
     }
 
     @Override
@@ -76,14 +77,14 @@ public class ZeroImpactChallenge extends Challenge {
 
     @Override
     public String toString() {
-	StringBuffer sb = new StringBuffer();
-	sb.append(this.type + ";");
-	sb.append(";");
-	sb.append(this.nTrips + ";");
-	sb.append(this.prize + ";");
-	sb.append(this.pointType + ";");
-	sb.append(this.chId);
-	return sb.toString();
-    }
+		StringBuffer sb = new StringBuffer();
+		sb.append(this.type + ";");
+		sb.append(";");
+		sb.append(this.nTrips + ";");
+		sb.append(this.prize + ";");
+		sb.append(this.pointType + ";");
+		sb.append(this.chId);
+		return sb.toString();
+	}
 
 }

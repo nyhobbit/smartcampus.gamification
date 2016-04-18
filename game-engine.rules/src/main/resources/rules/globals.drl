@@ -15,3 +15,6 @@
 global Double busDistance_try_min;
 global Double bikeDistance_try_min;
 global Double trainDistance_try_min;
+
+global Integer bike_sharing_pioneer_size;
+global Integer park_and_ride_pioneer_size;
