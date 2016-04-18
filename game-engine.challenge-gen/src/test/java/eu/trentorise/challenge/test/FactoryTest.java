@@ -129,5 +129,25 @@ public class FactoryTest {
  	Assert.assertTrue(c.getGeneratedRules() != null
  		&& !c.getGeneratedRules().equals(""));
  	System.out.println(c.getGeneratedRules() + "\n\n");
-    }
+    
+    // ZEROIMPACT Challenge building
+    try { 
+    	c = chFactory.createChallenge(ChallengeType.ZEROIMPACT,
+    		"rules/templates");
+    	params = new HashMap<String, Object>();
+  	    params.put("target", new Integer(10));
+  	    params.put("bonus", new Integer(50));
+  	    params.put("point_type", "green leaves");
+  	    c.setTemplateParams(params);
+  	    c.compileChallenge(testUserId);
+    } catch (UndefinedChallengeException uce) {
+ 	    uce.printStackTrace();
+ 	}
+    Assert.assertTrue("Challenge " + ChallengeType.ZEROIMPACT + " created",
+     		c != null);
+    Assert.assertTrue(c.getType().equals(ChallengeType.ZEROIMPACT));
+    Assert.assertTrue(c.getGeneratedRules() != null
+     		&& !c.getGeneratedRules().equals(""));
+    System.out.println(c.getGeneratedRules() + "\n\n");
+    }	    
 }

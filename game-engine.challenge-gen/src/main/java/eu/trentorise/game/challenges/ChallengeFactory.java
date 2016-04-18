@@ -21,6 +21,8 @@ public class ChallengeFactory implements ChallengeFactoryInterface {
 	    return new RecommendationChallenge(templateDir);
 	case POINTSEARNED:
 		return new PointsEarnedChallenge(templateDir);
+	case ZEROIMPACT:
+		return new ZeroImpactChallenge(templateDir);
 	default:
 	    throw new UndefinedChallengeException("Unknown challenge type!"
 		    + chType.toString());
