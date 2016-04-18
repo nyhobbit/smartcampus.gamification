@@ -27,7 +27,6 @@ CustomData to have   []=used by
   - ch_ID_target [rule] [presentation]
   - ch_ID_success [rule] [presentation]
   - ch_ID_point_type [presentation] type of bonus point -> it must contain the name of PointConcept ("green leaves" for example)
-  - ch_ID_mode [presentation] modality of trip [values allowed: walk, bike, bikesharing, train, bus, car]
 */
 	
 template TravelModeTemplate
