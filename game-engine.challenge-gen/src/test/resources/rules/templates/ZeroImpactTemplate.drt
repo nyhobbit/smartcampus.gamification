@@ -30,7 +30,7 @@ CustomData to have   []=used by
   - ch_ID_mode [presentation] modality of trip [values allowed: walk, bike, bikesharing, train, bus, car]
 */
 	
-template TravelModeTemplate
+template ZeroImpactTemplate
 
 rule "ch_@{ch_ID}_trace"
 lock-on-active
