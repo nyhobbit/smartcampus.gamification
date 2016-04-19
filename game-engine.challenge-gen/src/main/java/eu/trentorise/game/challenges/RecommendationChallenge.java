@@ -11,7 +11,7 @@ import eu.trentorise.game.challenges.model.ChallengeType;
 public class RecommendationChallenge extends Challenge {
     private Integer prize = null;
     private String pointType = null;
-    private int recommendations = 0;
+    private double recommendations = 0;
 
     public RecommendationChallenge(String templateDir) {
 	super(templateDir, "GameRecommendationTemplate.drt");
@@ -47,7 +47,7 @@ public class RecommendationChallenge extends Challenge {
 
 	if (!tp.containsKey("target"))
 	    throw new UndefinedChallengeException("undefined challenge target!");
-	this.recommendations = ((Double) tp.get("target")).intValue();
+	this.recommendations = ((Double)tp.get("target")).doubleValue();
 	customData.put("ch_" + this.chId + "_target", this.recommendations);
 
 	customData.put("ch_" + this.chId
