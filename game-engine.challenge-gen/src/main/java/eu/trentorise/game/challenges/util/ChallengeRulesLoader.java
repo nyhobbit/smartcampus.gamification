@@ -68,7 +68,13 @@ public final class ChallengeRulesLoader {
 		crr.setBonus(Integer.valueOf(elements[4]));
 		crr.setPointType(elements[5]);
 		crr.setBaselineVar(elements[7]);
-		crr.setSelectionCriteria(elements[8]);
+		crr.setSelectionCriteriaCustomData(elements[8]);
+		if (elements.length > 9) {
+		    crr.setSelectionCriteriaPoints(elements[9]);
+		}
+		if (elements.length > 10) {
+		    crr.setSelectionCriteriaBadges(elements[10]);
+		}
 		response.getChallenges().add(crr);
 	    }
 	    logger.debug("Rows in file " + response.getChallenges().size());

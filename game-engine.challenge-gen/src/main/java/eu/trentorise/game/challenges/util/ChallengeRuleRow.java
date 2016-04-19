@@ -6,10 +6,12 @@ public class ChallengeRuleRow {
     private String goalType;
     private Object target;
     private String pointType;
-    private String selectionCriteria;
     private Integer bonus;
     private String name;
     private String baselineVar;
+    private String selectionCriteriaCustomData;
+    private String selectionCriteriaPoints;
+    private String selectionCriteriaBadges;
 
     public String getType() {
 	return type;
@@ -43,12 +45,9 @@ public class ChallengeRuleRow {
 	this.pointType = pointType;
     }
 
-    public String getSelectionCriteria() {
-	return selectionCriteria;
-    }
-
-    public void setSelectionCriteria(String selectionCriteria) {
-	this.selectionCriteria = selectionCriteria;
+    public void setSelectionCriteriaCustomData(
+	    String selectionCriteriaCustomData) {
+	this.selectionCriteriaCustomData = selectionCriteriaCustomData;
     }
 
     public void setBonus(Integer bonus) {
@@ -73,6 +72,26 @@ public class ChallengeRuleRow {
 
     public void setBaselineVar(String baselineVar) {
 	this.baselineVar = baselineVar;
+    }
+
+    public void setSelectionCriteriaPoints(String selectionCriteriaPoints) {
+	this.selectionCriteriaPoints = selectionCriteriaPoints;
+    }
+
+    public String getSelectionCriteriaPoints() {
+	return selectionCriteriaPoints;
+    }
+
+    public String getSelectionCriteriaCustomData() {
+	return selectionCriteriaCustomData;
+    }
+
+    public void setSelectionCriteriaBadges(String selectionCriteriaBadges) {
+	this.selectionCriteriaBadges = selectionCriteriaBadges;
+    }
+
+    public String getSelectionCriteriaBadges() {
+	return selectionCriteriaBadges;
     }
 
 }

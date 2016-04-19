@@ -85,7 +85,14 @@ public class ChallengesRulesGenerator {
 		if (challengeSpec.getTarget() instanceof Double) {
 		    params.put("target", challengeSpec.getTarget());
 		}
-		params.put("mode", challengeSpec.getGoalType());
+		if (challengeSpec.getType().equalsIgnoreCase(
+			ChallengeType.NEXTBADGE.toString())
+			|| challengeSpec.getType().equalsIgnoreCase(
+				ChallengeType.BADGECOLLECTION.toString())) {
+		    params.put("badge_collection", challengeSpec.getGoalType());
+		} else {
+		    params.put("mode", challengeSpec.getGoalType());
+		}
 		params.put("bonus", challengeSpec.getBonus());
 		params.put("point_type", challengeSpec.getPointType());
 		params.put(
