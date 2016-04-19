@@ -36,8 +36,7 @@ rule 'ch_@{ch_ID}_trace'
 lock-on-active
 when
 	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, $counter : this['ch_@{ch_ID}_counter'])
-	Player(id == '@{ch_player}')
-	$bc : BadgeCollectionConcept(name == '@{ch_badge_collection}') 
+	$bn : BadgeNotification(this.badgeColletion == '@{ch_badge_collection}', this.playerId == '@{ch_player}') 
 then
 	log("ch_@{ch_ID}_trace -- Badge Collection: " + "@{ch_badge_collection}" + " updated");
 	if($counter == null) {
@@ -53,10 +52,8 @@ when
 	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this['ch_@{ch_ID}_counter'] == this['ch_@{ch_ID}_target'],
 		this['ch_@{ch_ID}_success'] != true)
 	Player(id == '@{ch_player}')
-	$bc: BadgeCollectionConcept(name == '@{ch_badge_collection}') 
 	$pc : PointConcept(name == "@{ch_point_type}")
 then
-	log("ch_@{ch_ID} success");
 	$pc.setScore($pc.getScore() + (Integer) $c.get("ch_@{ch_ID}_bonus"));
 	$c.put("ch_@{ch_ID}_success",true);
 	insert(new PointDelta((Integer)$c.get("ch_@{ch_ID}_bonus"),"green leaves"));
