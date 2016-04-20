@@ -32,7 +32,8 @@ template "BadgeCollectionCompletion"
 
 rule 'ch_@{ch_ID}_check'
 when
-	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, this['ch_@{ch_ID}_success'] == false)
+	$c : CustomData($now : System.currentTimeMillis(), this['ch_@{ch_ID}_startChTs'] <= $now, this['ch_@{ch_ID}_endChTs'] > $now, 
+		this['ch_@{ch_ID}_success'] != true)
 	Player(id == '@{ch_player}')
 	$bc : BadgeCollectionConcept(name == '@{ch_badge_collection}', badgeEarned.size() == @{ch_badge_collection}_size) 
 	$pc : PointConcept(name == "@{ch_point_type}")
