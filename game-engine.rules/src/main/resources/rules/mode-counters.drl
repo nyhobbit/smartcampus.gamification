@@ -218,6 +218,7 @@ then
 end
 
 
+/*
 rule "update point counters"
 when 
 	$delta : PointDelta(this.pointType == "green leaves")
@@ -231,3 +232,4 @@ then
 	update($c);
 	retract($delta);
 end
+*/

@@ -36,6 +36,12 @@ public class LongGameTest extends GameTest {
     public void defineGame() {
 	List<GameConcept> concepts = new ArrayList<GameConcept>();
 	concepts.add(new PointConcept("green leaves"));
+	/*
+	 * here we add Point Concepts for weekly green leaves
+	 */
+	concepts.add(new PointConcept("green leaves week 1"));
+	concepts.add(new PointConcept("green leaves week 2"));
+	
 	concepts.add(new BadgeCollectionConcept("green leaves"));
 	concepts.add(new BadgeCollectionConcept("bike aficionado"));
 	concepts.add(new BadgeCollectionConcept("public transport aficionado"));
@@ -46,15 +52,18 @@ public class LongGameTest extends GameTest {
 	String rootProjFolder = new File(System.getProperty("user.dir"))
 		.getParent();
 	String pathGame = rootProjFolder
-		+ "/game-engine.games/rovereto-longgame";
+		+ "/game-engine.rules/src/main/resources/rules";
 
 	loadFilesystemRules(GAME, Arrays.asList(pathGame + "/constants",
+		pathGame + "/badgeUpdates.drl",
+		pathGame + "/globals.drl", 
 		pathGame + "/greenBadges.drl", pathGame + "/greenPoints.drl",
 		pathGame + "/mode-counters.drl", pathGame
 			+ "/finalClassificationBadges.drl", pathGame
 			+ "/specialBadges.drl", pathGame
 			+ "/weekClassificationBadges.drl", pathGame
-			+ "/resetGameData.drl"));
+			+ "/resetGameData.drl", pathGame
+			+ "/weeklyPoints.drl"));
 
 	addGameTask(GAME, new ClassificationTask(null, 10, "green leaves",
 		"week classification green"));
