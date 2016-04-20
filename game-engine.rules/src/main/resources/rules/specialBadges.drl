@@ -126,7 +126,7 @@ then
 	log("apply  \'"+$endBS+"_BSstation badge\'");
 	$bc.getBadgeEarned().add((String) $endBS+'_BSstation');
 	insert( new BadgeNotification($gameId,$playerId,$endBS+'_BSstation'));
-	insert ( new BadgeUpdate((String) $startBS+"_BSstation", "bike sharing pioneer"));		
+	insert ( new BadgeUpdate((String) $endBS+"_BSstation", "bike sharing pioneer"));		
 	update( $bc );
 end
 
