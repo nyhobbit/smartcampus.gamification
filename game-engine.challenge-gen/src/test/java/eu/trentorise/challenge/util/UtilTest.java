@@ -29,7 +29,6 @@ public class UtilTest {
 	assertTrue(!result.getChallenges().isEmpty());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void readUserData() throws IOException {
 	String ref = "savedtrips1.json";
